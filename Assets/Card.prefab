@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1080095442862307525
 RectTransform:
   m_ObjectHideFlags: 0
@@ -88,6 +88,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00962b4371d8c8a4dacf8b7c0e2f3512, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentCard: {fileID: 0}
+  visualShadow: {fileID: 0}
+  shakeParent: {fileID: 0}
+  tiltParent: {fileID: 0}
+  cardImage: {fileID: 0}
+  followSpeed: 30
+  rotationAmount: 20
+  rotationSpeed: 20
+  autoTiltAmount: 30
+  manualTiltAmount: 20
+  tiltSpeed: 20
+  scaleAnimations: 1
+  scaleOnHover: 1.15
+  scaleOnSelect: 1.25
+  scaleTransition: 0.15
+  scaleEase: 27
+  selectPunchAmount: 20
+  hoverPunchAngle: 5
+  hoverTransition: 0.15
+  swapAnimations: 1
+  swapRotationAngle: 30
+  swapTransition: 0.15
+  swapVibrato: 5
 --- !u!1 &5844524493666141805
 GameObject:
   m_ObjectHideFlags: 0
@@ -98,6 +121,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2070564765085119699}
   - component: {fileID: 8440665039743897029}
+  - component: {fileID: 7515235823478598596}
   - component: {fileID: 6835082735651288779}
   - component: {fileID: 1672480332470499571}
   m_Layer: 5
@@ -135,6 +159,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5844524493666141805}
   m_CullTransparentMesh: 1
+--- !u!114 &7515235823478598596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5844524493666141805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!114 &6835082735651288779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,6 +201,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 167736094752b5c41acbb1e0b322b99b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  imageComponent: {fileID: 7515235823478598596}
   instantiateVisual: 1
   moveSpeedLimit: 50
   selected: 0
@@ -155,6 +210,27 @@ MonoBehaviour:
   isHovering: 0
   isDragging: 0
   wasDragged: 0
+  PointerEnterEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  PointerExitEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  PointerUpEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  PointerDownEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  BeginDragEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  EndDragEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  SelectEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &1672480332470499571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,4 +271,4 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 4242092114864452227}
+  m_TargetGraphic: {fileID: 7515235823478598596}

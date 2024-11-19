@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, IPointerDownHandler
 {
     private Canvas canvas;
-    private Image imageComponent;
+    [SerializeField] private Image imageComponent;
     [SerializeField] private bool instantiateVisual = true;
     // private VisualCardsHandler visualHandler;
     private Vector3 offset;
@@ -32,14 +32,48 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     public bool isDragging;
     [HideInInspector] public bool wasDragged;
 
-    // [Header("Events")]
-    // [HideInInspector] public UnityEvent<Card> PointerEnterEvent;
-    // [HideInInspector] public UnityEvent<Card> PointerExitEvent;
-    // [HideInInspector] public UnityEvent<Card, bool> PointerUpEvent;
-    // [HideInInspector] public UnityEvent<Card> PointerDownEvent;
-    // [HideInInspector] public UnityEvent<Card> BeginDragEvent;
-    // [HideInInspector] public UnityEvent<Card> EndDragEvent;
-    // [HideInInspector] public UnityEvent<Card, bool> SelectEvent;
+    [Header("Events")]
+    [HideInInspector] public UnityEvent<CardMovement> PointerEnterEvent;
+    [HideInInspector] public UnityEvent<CardMovement> PointerExitEvent;
+    [HideInInspector] public UnityEvent<CardMovement, bool> PointerUpEvent;
+    [HideInInspector] public UnityEvent<CardMovement> PointerDownEvent;
+    [HideInInspector] public UnityEvent<CardMovement> BeginDragEvent;
+    [HideInInspector] public UnityEvent<CardMovement> EndDragEvent;
+    [HideInInspector] public UnityEvent<CardMovement, bool> SelectEvent;
+    
+    
+    void Start()
+    {
+        canvas = GetComponentInParent<Canvas>();
+
+        if (!instantiateVisual)
+            return;
+
+        // visualHandler = FindObjectOfType<VisualCardsHandler>();
+        // cardVisual = Instantiate(cardVisualPrefab, visualHandler ? visualHandler.transform : canvas.transform).GetComponent<CardVisual>();
+        // cardVisual.Initialize(this);
+    }
+    void Update()
+    {
+        ClampPosition();
+
+        if (isDragging)
+        {
+            Vector2 targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition) - offset;
+            Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
+            Vector2 velocity = direction * Mathf.Min(moveSpeedLimit, Vector2.Distance(transform.position, targetPosition) / Time.deltaTime);
+            transform.Translate(velocity * Time.deltaTime);
+        }
+    }
+
+    void ClampPosition()
+    {
+        Vector2 screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
+        Vector3 clampedPosition = transform.position;
+        clampedPosition.x = Mathf.Clamp(clampedPosition.x, -screenBounds.x, screenBounds.x);
+        clampedPosition.y = Mathf.Clamp(clampedPosition.y, -screenBounds.y, screenBounds.y);
+        transform.position = new Vector3(clampedPosition.x, clampedPosition.y, 0);
+    }
     
     public void OnDrag(PointerEventData eventData)
     {
@@ -47,12 +81,11 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        print("begin drag");
-        // BeginDragEvent.Invoke(this);
-        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        offset = mousePosition - (Vector2)transform.position;
+        BeginDragEvent.Invoke(this);
+        // Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        // offset = mousePosition - (Vector2)transform.position;
         isDragging = true;
-        // canvas.GetComponent<GraphicRaycaster>().enabled = false;
+        canvas.GetComponent<GraphicRaycaster>().enabled = false;
         imageComponent.raycastTarget = false;
 
         wasDragged = true;
@@ -60,10 +93,9 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        print("end drag");
-        // EndDragEvent.Invoke(this);
+        EndDragEvent.Invoke(this);
         isDragging = false;
-        // canvas.GetComponent<GraphicRaycaster>().enabled = true;
+        canvas.GetComponent<GraphicRaycaster>().enabled = true;
         imageComponent.raycastTarget = true;
 
         StartCoroutine(FrameWait());
