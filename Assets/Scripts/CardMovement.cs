@@ -3,6 +3,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using System.Collections;
+using DG.Tweening;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
@@ -23,6 +24,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     [HideInInspector] public UnityEvent<CardMovement> EndDragEvent;
     [HideInInspector] public UnityEvent<CardMovement, bool> SelectEvent;
 
+    public CardVisual CardVisual => _currentCardVisual;
     public bool WasDragged { get; private set; }
     public bool IsHovering { get; private set; }
     public bool IsDragging { get; private set; }
@@ -30,6 +32,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     private Canvas _canvas;
     private Image _imageComponent;
     private CardVisual _currentCardVisual;
+    private bool _canBeSelected = true;
     
     void Start()
     {
@@ -70,12 +73,19 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         transform.position = new Vector3(clampedPosition.x, clampedPosition.y, 0);
     }
     
+    public void MoveToPoint(Vector3 point)
+    {
+        _canBeSelected = false;
+        transform.DOMove(point, .5f).SetEase(Ease.OutBack).OnComplete(() => _canBeSelected = true);
+    }
     public void OnDrag(PointerEventData eventData)
     {
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (_canBeSelected == false) return;
+        
         BeginDragEvent.Invoke(this);
         GameManager.Instance.SetCurrentCard(gameObject);
 
@@ -88,8 +98,14 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (_canBeSelected == false) return;
+
         EndDragEvent.Invoke(this);
-        // GameManager.Instance.CurrentCard = null;
+        
+        if (CardHolderInn.Instance.IsEnteredInn)
+        {
+            CardHolderInn.Instance.ReleaseCardOnIt(this);
+        }
 
         _canvas.GetComponent<GraphicRaycaster>().enabled = true;
         _imageComponent.raycastTarget = true;
