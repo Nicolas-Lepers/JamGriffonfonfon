@@ -96,9 +96,9 @@ public class GameManager : MonoBehaviour
 
             //add to bar
             cardInfo.CardDataRef = _cardsData[rand];
+            cardInfo.CardMovement.CardVisual.CardImage.sprite = cardInfo.CardDataRef.Sprite;
             //CardInfo cardData = _cardsDeck[rand];
             _cardsBar.Add(cardInfo);
-
             //remove from deck
             _cardsDeck.RemoveAt(rand);
 
@@ -168,6 +168,7 @@ public class GameManager : MonoBehaviour
                 count++;
 
         }
+
 
         if (needFollow == true)
             return bestGroup;
