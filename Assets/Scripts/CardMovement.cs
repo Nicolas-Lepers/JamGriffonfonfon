@@ -37,8 +37,15 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         _canvas = GetComponentInParent<Canvas>();
         _imageComponent = GetComponent<Image>();
 
-        _currentCardVisual = Instantiate(_cardVisualPrefab, CardVisualHandler.Instance.transform);
-        _currentCardVisual.Initialize(this);
+        if (CardVisualHandler.Instance == null)
+        {
+            Debug.LogWarning("CardVisualHandler is missing from the scene.");
+        }
+        else
+        {
+            _currentCardVisual = Instantiate(_cardVisualPrefab, CardVisualHandler.Instance.transform);
+            _currentCardVisual.Initialize(this);
+        }
     }
     void Update()
     {

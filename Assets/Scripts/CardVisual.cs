@@ -152,7 +152,12 @@ public class CardVisual : MonoBehaviour
     {
         if (_scaleAnimations)
             transform.DOScale(_scaleOnSelect, _scaleTransition).SetEase(_scaleEase);
-        
+
+        if (CardDraggedHandler.Instance == null)
+        {
+            Debug.LogWarning("CardDraggedHandler is missing from the scene.");
+            return;
+        }
         transform.SetParent(CardDraggedHandler.Instance.transform);
     }
 
