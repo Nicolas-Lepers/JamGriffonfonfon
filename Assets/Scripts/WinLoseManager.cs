@@ -46,7 +46,7 @@ public class WinLoseManager : MonoBehaviour
     }
     private void MoveText(TMP_Text text)
     {
-        var currentY = text.transform.hierarchyCapacity;
+        var currentY = text.transform.position.y;
 
         text.transform.position = new Vector3(_winText.transform.position.x, currentY + _textMoveOffset, _winText.transform.position.z);
         text.transform.DOMoveY(currentY, _textMoveTime).SetEase(_textMoveEase);
