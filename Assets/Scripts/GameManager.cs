@@ -85,6 +85,7 @@ public class GameManager : MonoBehaviour
         CanSelectedCard = true;
 
         var wait = new WaitForSeconds(1);
+        yield return wait;
 
         while (_cardsBar.Count < 4)
         {
