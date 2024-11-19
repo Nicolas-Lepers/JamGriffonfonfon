@@ -24,7 +24,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     private float pointerUpTime;
 
     [Header("Visual")]
-    [SerializeField] private GameObject cardVisualPrefab;
+    [SerializeField] private CardVisual cardVisualPrefab;
     // [HideInInspector] public CardVisual cardVisual;
 
     [Header("States")]
@@ -40,15 +40,18 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     [HideInInspector] public UnityEvent<CardMovement> BeginDragEvent;
     [HideInInspector] public UnityEvent<CardMovement> EndDragEvent;
     [HideInInspector] public UnityEvent<CardMovement, bool> SelectEvent;
-    
+
+    private Transform _startParent;
     
     void Start()
     {
+        _startParent = transform.parent;
         canvas = GetComponentInParent<Canvas>();
 
         if (!instantiateVisual)
             return;
 
+        cardVisualPrefab.Initialize(this, canvas);
         // visualHandler = FindObjectOfType<VisualCardsHandler>();
         // cardVisual = Instantiate(cardVisualPrefab, visualHandler ? visualHandler.transform : canvas.transform).GetComponent<CardVisual>();
         // cardVisual.Initialize(this);
@@ -86,9 +89,12 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         // offset = mousePosition - (Vector2)transform.position;
         isDragging = true;
         canvas.GetComponent<GraphicRaycaster>().enabled = false;
+
         imageComponent.raycastTarget = false;
 
         wasDragged = true;
+        
+        transform.SetParent(CardDragged.Instance.transform);
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -96,7 +102,9 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         EndDragEvent.Invoke(this);
         isDragging = false;
         canvas.GetComponent<GraphicRaycaster>().enabled = true;
+
         imageComponent.raycastTarget = true;
+        transform.SetParent(_startParent);
 
         StartCoroutine(FrameWait());
 
@@ -105,14 +113,19 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
             yield return new WaitForEndOfFrame();
             wasDragged = false;
         }
+        
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        PointerEnterEvent.Invoke(this);
+        isHovering = true;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        PointerExitEvent.Invoke(this);
+        isHovering = false;
     }
 
     public void OnPointerUp(PointerEventData eventData)
