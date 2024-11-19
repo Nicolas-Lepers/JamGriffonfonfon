@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst.Intrinsics;
 using Unity.VisualScripting;
+using UnityEditor.Networking.PlayerConnection;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -42,14 +43,15 @@ public class GameManager : MonoBehaviour
 
 
     [Header("Cards")]
-    [SerializeField] List<CardData> _cardsInn = new List<CardData>();
-    [SerializeField] List<CardData> _cardsBar = new List<CardData>();
-    [SerializeField] List<CardData> _cardsDeck = new List<CardData>();
-    [SerializeField] List<CardData> _discardPile = new List<CardData>();
+    [SerializeField] List<CardInfo> _cardsInn = new List<CardInfo>();
+    [SerializeField] List<CardInfo> _cardsBar = new List<CardInfo>();
+    [SerializeField] List<CardInfo> _cardsDeck = new List<CardInfo>();
+    [SerializeField] List<CardInfo> _discardPile = new List<CardInfo>();
 
-    public List<CardData> CardsInn => _cardsInn;
-    public List<CardData> CardsBar => _cardsBar;
-    public List<CardData> CardsDeck => _cardsDeck;
+    public CardMovement CurrentCard = null;
+    public List<CardInfo> CardsInn => _cardsInn;
+    public List<CardInfo> CardsBar => _cardsBar;
+    public List<CardInfo> CardsDeck => _cardsDeck;
 
 
     [SerializeField] int _numnerCardInDiscardPileToLose = 8;
@@ -99,13 +101,13 @@ public class GameManager : MonoBehaviour
             int rand = Random.Range(0, _cardsDeck.Count - 1);
 
             //add to bar
-            CardData cardData = _cardsDeck[rand];
+            CardInfo cardData = _cardsDeck[rand];
             _cardsBar.Add(cardData);
 
             //remove from deck
             _cardsDeck.RemoveAt(rand);
 
-            cardInfo.CardDataRef = cardData;
+            cardInfo.CardDataRef = cardData.CardDataRef;
             cardInfo.transform.position = _cardBarTargetPos[cardsInBar].position;
             cardInfo.gameObject.SetActive(true);
         }
@@ -113,10 +115,9 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < _cardsBar.Count; i++)
         {
             //check all condition in bar
-            if (_cardsBar[i].InnIrritationCondition.IsIrritated(i))
-            {
-                _cardsBar[i].IrritationEffect.ActivateEffect(i);
-            }
+            if (_cardsBar[i].CardDataRef.InnIrritationCondition.IsIrritated(i) == false)
+                continue;
+            _cardsBar[i].CardDataRef.IrritationEffect.ActivateEffect(i);
         }
     }
 
@@ -126,7 +127,7 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < _cardsInn.Count; i++)
         {
-            if (_cardsInn[i].IsGoblin)
+            if (_cardsInn[i].CardDataRef.IsGoblin)
                 count++;
         }
         return count;
@@ -138,7 +139,7 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < _cardsInn.Count; i++)
         {
-            if (_cardsInn[i].Consumable == Consumable.FOOD)
+            if (_cardsInn[i].CardDataRef.Consumable == Consumable.FOOD)
                 count++;
         }
         return count;
@@ -149,34 +150,35 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < _cardsInn.Count; i++)
         {
-            if (_cardsInn[i].Consumable == Consumable.BEER)
+            if (_cardsInn[i].CardDataRef.Consumable == Consumable.BEER)
                 count++;
         }
         return count;
     }
+
 
     public void PhaseInn()
     {
         for (int i = 0; i < _cardsInn.Count; i++)
         {
             //check consequance in Inn
-            if (_cardsInn[i].InnIrritationCondition.IsIrritated(i))
-            {
-                _cardsInn[i].IrritationEffect.ActivateEffect(i);
-            }
+            if (_cardsInn[i].CardDataRef.InnIrritationCondition.IsIrritated(i) == false)
+                continue;
+
+            _cardsInn[i].CardDataRef.IrritationEffect.ActivateEffect(i);
         }
     }
 
-    public void AddCardInInn(CardData card)
+    public void AddCardInInn(CardInfo card)
     {
         _cardsInn.Add(card);
     }
 
-    public void AddCardInInnAtIndex(CardData card, int index)
+    public void AddCardInInnAtIndex(CardInfo card, int index)
     {
         _cardsInn.Insert(index, card);
     }
-    public void AddCardToBar(CardData card)
+    public void AddCardToBar(CardInfo card)
     {
         _cardsBar.Add(card);
     }
@@ -184,7 +186,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Remove one card in inn to put in the bar
     /// </summary>
-    public void ReplaceCardToBar(CardData card)
+    public void ReplaceCardToBar(CardInfo card)
     {
         if (_cardsInn.Contains(card) == false)
             return;
@@ -193,14 +195,19 @@ public class GameManager : MonoBehaviour
         _cardsBar.Add(card);
     }
 
-    public void CardLeaveInn(CardData card)
+    public void CardLeaveInn(CardInfo card)
     {
         if (_cardsInn.Contains(card) == false) return;
 
         _cardsInn.Remove(card);
     }
 
-    public void CardLeaveInnWithNeihgbourUp(CardData card, int nbNeihgbourUp)
+    public void GoblinLeaveInn()
+    {
+
+    }
+
+    public void CardLeaveInnWithNeihgbourUp(CardInfo card, int nbNeihgbourUp)
     {
         if (_cardsInn.Contains(card) == false) return;
 
@@ -208,34 +215,94 @@ public class GameManager : MonoBehaviour
 
         for (int i = nbNeihgbourUp - 1; i >= 0; i--)
         {
-            CardData cardNeihgbour = _cardsInn[value + i];
-            CardLeaveInn(cardNeihgbour);
+            int neighbour = value + i;
+            if (neighbour >= _cardsInn.Count)
+                break;
+
+            CardLeaveInn(_cardsInn[neighbour]);
         }
 
         _cardsInn.Remove(card);
     }
 
-    
-
-
-    public void SwitchCard(CardData card, int index)
+    public void CheckNuisance(CardInfo card)
     {
-        CardData temp = _cardsInn[index];
+        CardLeaveInn(card);
+
+        NuisanceType nuisance = card.CardDataRef.Nuisance;
+
+        for (int i = _cardsInn.Count - 1; i >= 0; i--)
+        {
+            CardData cardData = _cardsInn[i].CardDataRef;
+            if (cardData.InnIrritationCondition.IsIrritated(i) == false)
+                continue;
+
+            cardData.IrritationEffect.ActivateEffect(i);
+            CheckNuisance(_cardsInn[i]);
+        }
+    }
+
+    public void SetCardToDiscardPile(CardData card)
+    {
+
+    }
+
+
+    public void SwitchCard(CardInfo card, int index)
+    {
+        CardInfo temp = _cardsInn[index];
         int targetIndex = GetCardIndexInInn(temp);
         _cardsInn[index] = card;
         _cardsInn[targetIndex] = temp;
     }
 
-    private int GetCardIndexInInn(CardData card)
+    private int GetCardIndexInInn(CardInfo card)
     {
         return _cardsInn.IndexOf(card);
     }
 
-    public CardData GetRandomCardInBar()
+    public CardInfo GetRandomCardInBar()
     {
         return _cardsBar[Random.Range(0, _cardsBar.Count)];
     }
 
 
 
+    public void SetPositionInInnForAllCard()
+    {
+        for (int i = 0; i < _cardsInn.Count; i++)
+        {
+            Transform card = _cardsInn[i].transform;
+            Vector2 pos = card.position;
+
+            pos = _cardInnTargetDefaultPos.position;
+            pos.y += _offsetPosCardInn * i;
+
+            card.position = pos;
+        }
+    }
+
+    public void SetPositionInInnForCardAt(int index)
+    {
+        Transform card = _cardsInn[index].transform;
+        Vector2 pos = card.position;
+
+        pos = _cardInnTargetDefaultPos.position;
+        pos.y += _offsetPosCardInn * index;
+
+        card.position = pos;
+    }
+
+    public void SetPositionInInnForCard(CardInfo cardInfo)
+    {
+        int index = GetCardIndexInInn(cardInfo);
+
+        Transform card = _cardsInn[index].transform;
+        Vector2 pos = card.position;
+
+        pos = _cardInnTargetDefaultPos.position;
+        pos.y += _offsetPosCardInn * index;
+
+        card.position = pos;
+    }
 }
