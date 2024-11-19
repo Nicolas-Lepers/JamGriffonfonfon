@@ -179,7 +179,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         
         transform.SetSiblingIndex(100);
         CardVisual.transform.SetSiblingIndex(100);
-        transform.SetParent(CardDraggedHandler.Instance.transform);
+        // transform.SetParent(CardDraggedHandler.Instance.transform);
     }
     
     private void MoveCardToCenter()
@@ -214,7 +214,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
             transform.SetSiblingIndex(_siblingIndex);
             CardVisual.transform.SetSiblingIndex(_siblingIndexVisual);
             
-            transform.SetParent(_lastParent);
+            // transform.SetParent(_lastParent);
             
             IsEnlarge = false;
         }

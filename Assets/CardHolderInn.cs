@@ -35,11 +35,7 @@ public class CardHolderInn : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void ReleaseCardOnIt(CardMovement card)
     {
-        GameManager.Instance.PhaseInn();
-        
         _cardsInn.Add(card);
-        card.gameObject.transform.SetParent(_parentCardInn);
-        card.SetNewParent(_parentCardInn);
         card.transform.SetSiblingIndex(0);
         card.CardVisual.transform.SetSiblingIndex(0);
 
@@ -53,6 +49,8 @@ public class CardHolderInn : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             _cardsInn[i].MoveToPoint(_parentCardInn.position + new Vector3(0, _offsetPosYCardInn * i, 0), true);
         }
+        
+        GameManager.Instance.PhaseInn();
     }
     
     private void OnDrawGizmos()
