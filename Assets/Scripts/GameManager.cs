@@ -1,4 +1,5 @@
 using AntoineFoucault.Utilities;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -18,10 +19,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] float _offsetPosCardInn = 0.5f;
 
     [SerializeField] GameObject _prefabCardVisual;
-    private List<CardInfo> _cardsQueue = new List<CardInfo>();
-
 
     [Header("Cards")]
+    [SerializeField] List<CardData> _cardsData = new List<CardData>();
+
     [SerializeField] List<CardInfo> _cardsInn = new List<CardInfo>();
     [SerializeField] List<CardInfo> _cardsBar = new List<CardInfo>();
     [SerializeField] List<CardInfo> _cardsDeck = new List<CardInfo>();
@@ -48,16 +49,19 @@ public class GameManager : MonoBehaviour
     public bool CanSelectedCard = true;
     private void Start()
     {
-        for (int i = 0; i < _cardsDeck.Count; i++)
+        for (int i = 0; i < _cardsData.Count; i++)
         {
             GameObject go = Instantiate(_prefabCardVisual, _deckPos.transform.position, Quaternion.identity, _deckPos);
             //go.SetActive(false);
 
             if (go.TryGetComponent(out CardInfo card) != false)
-                _cardsQueue.Add(card);
+            {
+                card.CardDataRef = _cardsData[i];
+                _cardsDeck.Add(card);
+            }
         }
 
-        PhaseBar();
+        StartCoroutine(PhaseBar());
     }
     public void CheckEndGame()
     {
@@ -76,28 +80,32 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void PhaseBar()
+    public IEnumerator PhaseBar()
     {
         CanSelectedCard = true;
+
+        var wait = new WaitForSeconds(1);
+
         while (_cardsBar.Count < 4)
         {
             int cardsInBar = _cardsBar.Count;
-            CardInfo cardInfo = _cardsQueue[^1];
-            _cardsQueue.RemoveAt(_cardsQueue.Count - 1);
+            CardInfo cardInfo = _cardsDeck[^1];
+            _cardsDeck.RemoveAt(_cardsDeck.Count - 1);
 
             int rand = Random.Range(0, _cardsDeck.Count - 1);
 
             //add to bar
-            CardInfo cardData = _cardsDeck[rand];
-            _cardsBar.Add(cardData);
+            cardInfo.CardDataRef = _cardsData[rand];
+            //CardInfo cardData = _cardsDeck[rand];
+            _cardsBar.Add(cardInfo);
 
             //remove from deck
             _cardsDeck.RemoveAt(rand);
 
-            cardInfo.CardDataRef = cardData.CardDataRef;
             // cardInfo.GetComponent<CardMovement>()
             cardInfo.transform.position = _cardBarTargetPos[cardsInBar].position;
             cardInfo.gameObject.SetActive(true);
+            yield return wait;
         }
 
         for (int i = 0; i < _cardsBar.Count; i++)
@@ -106,11 +114,15 @@ public class GameManager : MonoBehaviour
             if (_cardsBar[i].CardDataRef.InnIrritationCondition.IsIrritated(i) == false)
                 continue;
             _cardsBar[i].CardDataRef.IrritationEffect.ActivateEffect(i);
+            yield return wait;
         }
     }
-    public void PhaseInn()
+    public IEnumerator PhaseInn()
     {
         CanSelectedCard = false;
+
+        var wait = new WaitForSeconds(1);
+
         for (int i = 0; i < _cardsInn.Count; i++)
         {
             //check consequance in Inn
@@ -118,9 +130,10 @@ public class GameManager : MonoBehaviour
                 continue;
 
             _cardsInn[i].CardDataRef.IrritationEffect.ActivateEffect(i);
+            yield return wait;
         }
 
-        PhaseBar();
+        yield return StartCoroutine(PhaseBar());
     }
     public int GetNumberOfGolbin()
     {
