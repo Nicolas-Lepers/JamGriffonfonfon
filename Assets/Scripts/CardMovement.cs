@@ -179,7 +179,6 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         
         transform.SetSiblingIndex(100);
         CardVisual.transform.SetSiblingIndex(100);
-        // transform.SetParent(CardDraggedHandler.Instance.transform);
     }
     
     private void MoveCardToCenter()
