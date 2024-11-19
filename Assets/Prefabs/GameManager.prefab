@@ -57,8 +57,14 @@ MonoBehaviour:
   _prefabCardVisual: {fileID: 5844524493666141805, guid: d7308de7c71e00242a062cfe196f459a, type: 3}
   _cardsHostel: []
   _cardsBar: []
-  _cardsDeck: []
+  _cardsDeck:
+  - {fileID: 11400000, guid: abc2df9979234c54c8ccddfaae143ba4, type: 2}
+  - {fileID: 11400000, guid: abc2df9979234c54c8ccddfaae143ba4, type: 2}
+  - {fileID: 11400000, guid: abc2df9979234c54c8ccddfaae143ba4, type: 2}
+  - {fileID: 11400000, guid: abc2df9979234c54c8ccddfaae143ba4, type: 2}
+  - {fileID: 11400000, guid: abc2df9979234c54c8ccddfaae143ba4, type: 2}
+  - {fileID: 11400000, guid: abc2df9979234c54c8ccddfaae143ba4, type: 2}
+  - {fileID: 11400000, guid: abc2df9979234c54c8ccddfaae143ba4, type: 2}
   _discardPile: []
   _numnerCardInDiscardPileToLose: 8
   _numberCardInHostelToWin: 7
-  _barPhase: 1
