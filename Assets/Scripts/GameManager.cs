@@ -305,7 +305,7 @@ public class GameManager : MonoBehaviour
         for (int i = _cardsInn.Count - 1; i >= 0; i--)
         {
             CardData cardData = _cardsInn[i].CardDataRef;
-            if (cardData.InnIrritationCondition.IsIrritated(i) == false)
+            if ((int)cardData.Nuisance != (int)cardData.BarIrritationCondition)
                 continue;
 
             cardData.IrritationEffect.ActivateEffect(i);

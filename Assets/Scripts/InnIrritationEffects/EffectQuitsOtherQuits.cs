@@ -8,8 +8,8 @@ public class EffectQuitsOtherQuits : IIrrationEffect
 
     public void ActivateEffect(int cardIndex)
     {
-        // PSEUDO CODE
-        // GameManager.Instance.QuitAt(cardIndex);
-        // GameManager.Instance.QuitAt(cardIndex+OtherOffset);
+        GameManager.Instance.CardLeaveInn(cardIndex);
+        if (GameManager.Instance.CardsInn.Count < cardIndex + OtherOffset && cardIndex + OtherOffset >= 0)
+            GameManager.Instance.CardLeaveInn(cardIndex+OtherOffset);
     }
 }
