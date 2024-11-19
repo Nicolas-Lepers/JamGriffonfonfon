@@ -173,6 +173,7 @@ MonoBehaviour:
   _shakeParent: {fileID: 1211072929508318294}
   _tiltParent: {fileID: 6119309265926585236}
   _cardImage: {fileID: 2669176176056372151}
+  _shadowTransform: {fileID: 3446729734186807148}
   _followSpeed: 30
   _rotationAmount: 20
   _rotationSpeed: 18

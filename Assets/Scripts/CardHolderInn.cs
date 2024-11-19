@@ -47,7 +47,9 @@ public class CardHolderInn : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         for (int i = 0; i < _cardsInn.Count; i++)
         {
-            _cardsInn[i].MoveToPoint(_parentCardInn.position + new Vector3(0, _offsetPosYCardInn * i, 0), true);
+            Vector3 targetPos = _parentCardInn.position + new Vector3(0, _offsetPosYCardInn * i, 0);
+            _cardsInn[i].MoveToPoint(targetPos, true);
+            card.SetNewBasePos(targetPos);
         }
         
         GameManager.Instance.PhaseInn();

@@ -1,3 +1,4 @@
+using System;
 using AntoineFoucault.Utilities;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,6 +8,9 @@ using Random = UnityEngine.Random;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+
+    public Action OnWin;
+    public Action OnLose;
 
 
     [SerializeField] Transform _canvasRef;
@@ -40,6 +44,7 @@ public class GameManager : MonoBehaviour
     private int _foodCount = 0;
     private int _beerNeighborCount = 0;
     private int _foodNeighborCount = 0;
+    private bool _hasGameOver = false;
 
     private void Awake()
     {
@@ -49,6 +54,9 @@ public class GameManager : MonoBehaviour
     public bool CanSelectedCard = true;
     private void Start()
     {
+        OnWin += GameOver;
+        OnLose += GameOver;
+        
         for (int i = 0; i < _cardsData.Count; i++)
         {
             GameObject go = Instantiate(_prefabCardVisual, _deckPos.transform.position, Quaternion.identity, _deckPos);
@@ -63,21 +71,34 @@ public class GameManager : MonoBehaviour
 
         StartCoroutine(PhaseBar());
     }
+
+    private void OnDisable()
+    {
+        OnWin -= GameOver;
+        OnLose -= GameOver;
+    }
+
+
     public void CheckEndGame()
     {
         if (_discardPile.Count >= _numnerCardInDiscardPileToLose)
-            Debug.Log("Loser");
+            OnLose?.Invoke();
 
         if (_cardsDeck.Count >= 0)
             return;
 
         if (_cardsInn.Count < _numberCardInInnToWin)
         {
-            Debug.Log("Loser");
+            OnLose?.Invoke();
             return;
         }
-        Debug.Log("Winer");
+        
+        OnWin?.Invoke();
+    }
 
+    private void GameOver()
+    {
+        _hasGameOver = true;
     }
 
     public IEnumerator PhaseBar()

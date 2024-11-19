@@ -98,7 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -237,7 +237,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -312,7 +312,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -336,6 +336,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7250246480159064427}
     m_Modifications:
+    - target: {fileID: 1452623643881523757, guid: 724bebc8afdda57499f71d79ea01fd0a, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4777771663152232785, guid: 724bebc8afdda57499f71d79ea01fd0a, type: 3}
       propertyPath: m_Name
       value: Slot_3
@@ -438,6 +442,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7250246480159064427}
     m_Modifications:
+    - target: {fileID: 1452623643881523757, guid: 724bebc8afdda57499f71d79ea01fd0a, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4777771663152232785, guid: 724bebc8afdda57499f71d79ea01fd0a, type: 3}
       propertyPath: m_Name
       value: Slot_2
@@ -540,6 +548,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7250246480159064427}
     m_Modifications:
+    - target: {fileID: 1452623643881523757, guid: 724bebc8afdda57499f71d79ea01fd0a, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4777771663152232785, guid: 724bebc8afdda57499f71d79ea01fd0a, type: 3}
       propertyPath: m_Name
       value: Slot_1
@@ -642,6 +654,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7250246480159064427}
     m_Modifications:
+    - target: {fileID: 1452623643881523757, guid: 724bebc8afdda57499f71d79ea01fd0a, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4777771663152232785, guid: 724bebc8afdda57499f71d79ea01fd0a, type: 3}
       propertyPath: m_Name
       value: Slot_4
