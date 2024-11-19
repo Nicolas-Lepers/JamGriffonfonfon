@@ -68,15 +68,15 @@ public class CardVisual : MonoBehaviour
 
     private void Start()
     {
-        //shadowDistance = visualShadow.localPosition;
+        shadowDistance = visualShadow.localPosition;
     }
 
-    public void Initialize(CardMovement target, int index = 0)
+    public void Initialize(CardMovement target, Canvas canvas)
     {
         //Declarations
         parentCard = target;
         cardTransform = target.transform;
-        canvas = GetComponent<Canvas>();
+        this.canvas = canvas;
         shadowCanvas = visualShadow.GetComponent<Canvas>();
     
         //Event Listening
@@ -173,13 +173,10 @@ public class CardVisual : MonoBehaviour
     {
         if(scaleAnimations)
             transform.DOScale(scaleOnSelect, scaleTransition).SetEase(scaleEase);
-    
-        canvas.overrideSorting = true;
     }
     
     private void EndDrag(CardMovement card)
     {
-        canvas.overrideSorting = false;
         transform.DOScale(1, scaleTransition).SetEase(scaleEase);
     }
     
