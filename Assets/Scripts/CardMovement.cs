@@ -7,7 +7,7 @@ using DG.Tweening;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, IPointerDownHandler
+public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, IPointerDownHandler, IPointerClickHandler
 {
     [Header("Visual")]
     [SerializeField] private CardVisual _cardVisualPrefab;
@@ -28,16 +28,28 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     public bool WasDragged { get; private set; }
     public bool IsHovering { get; private set; }
     public bool IsDragging { get; private set; }
+    public bool CanBeSelected { get; set; }
+
+    public bool CanBeSelectedManager => GameManager.Instance.CanSelectedCard; 
+
+    public bool IsEnlarge { get; private set; }
 
     private Canvas _canvas;
     private Image _imageComponent;
     private CardVisual _currentCardVisual;
-    private bool _canBeSelected = true;
+    private Vector3 _lastPos;
+    private int _siblingIndex;
+    private int _siblingIndexVisual;
+    private Transform _lastParent;
     
     void Start()
     {
+        // TODO remove when cards will be instantiated from the code
+        CanBeSelected = true;
+        
         _canvas = GetComponentInParent<Canvas>();
         _imageComponent = GetComponent<Image>();
+        _lastParent = transform.parent;
 
         if (CardVisualHandler.Instance == null)
         {
@@ -73,10 +85,14 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         transform.position = new Vector3(clampedPosition.x, clampedPosition.y, 0);
     }
     
-    public void MoveToPoint(Vector3 point)
+    public void MoveToPoint(Vector3 point, bool blockSelected)
     {
-        _canBeSelected = false;
-        transform.DOMove(point, .5f).SetEase(Ease.OutBack).OnComplete(() => _canBeSelected = true);
+        CanBeSelected = false;
+        transform.DOMove(point, .5f).SetEase(Ease.OutBack).OnComplete(() =>
+        {
+            if(blockSelected == false)
+                CanBeSelected = true;
+        });
     }
     public void OnDrag(PointerEventData eventData)
     {
@@ -84,11 +100,15 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (_canBeSelected == false) return;
+        if (CanBeSelected == false || CanBeSelectedManager == false) return;
         
         BeginDragEvent.Invoke(this);
         GameManager.Instance.SetCurrentCard(gameObject);
 
+        if (IsEnlarge)
+        {
+            CheckCardInfo();
+        }
         // _canvas.GetComponent<GraphicRaycaster>().enabled = false;
         _imageComponent.raycastTarget = false;
 
@@ -98,11 +118,11 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (_canBeSelected == false) return;
+        if (CanBeSelected == false || CanBeSelectedManager == false) return;
 
         EndDragEvent.Invoke(this);
         
-        if (CardHolderInn.Instance.IsEnteredInn)
+        if (CardHolderInn.Instance != null && CardHolderInn.Instance.IsEnteredInn)
         {
             CardHolderInn.Instance.ReleaseCardOnIt(this);
         }
@@ -122,12 +142,17 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (IsEnlarge) return;
+
         PointerEnterEvent.Invoke(this);
         IsHovering = true;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (IsEnlarge) return;
+
+        print("pointer exit");
         PointerExitEvent.Invoke(this);
         IsHovering = false;
     }
@@ -138,5 +163,65 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
     public void OnPointerDown(PointerEventData eventData)
     {
+      
+    }
+    
+    private void EnlargeCard()
+    {
+        if (IsDragging) return;
+        
+        IsEnlarge = true;
+        _currentCardVisual.transform.DOScale(Vector3.one * 5f, 0.3f).SetEase(Ease.OutBack);
+        transform.DOScale(Vector3.one * 15f, 0.3f).SetEase(Ease.OutBack);
+        
+        _siblingIndex = transform.GetSiblingIndex();
+        _siblingIndexVisual = _currentCardVisual.transform.GetSiblingIndex();
+        
+        transform.SetSiblingIndex(100);
+        CardVisual.transform.SetSiblingIndex(100);
+        transform.SetParent(CardDraggedHandler.Instance.transform);
+    }
+    
+    private void MoveCardToCenter()
+    {
+        if (IsDragging) return;
+
+        _lastPos = transform.position;
+        Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+        Vector3 worldCenter = Camera.main.ScreenToWorldPoint(screenCenter);
+        worldCenter.z = 0; // Ensure the z position is 0 to keep it on the same plane
+        transform.position = worldCenter;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        CheckCardInfo();
+    }
+
+    private void CheckCardInfo()
+    {
+        if (IsEnlarge == false)
+        {
+            MoveCardToCenter();
+            EnlargeCard();
+        }
+        else
+        {
+            transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+            _currentCardVisual.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+            transform.position = _lastPos;
+            
+            transform.SetSiblingIndex(_siblingIndex);
+            CardVisual.transform.SetSiblingIndex(_siblingIndexVisual);
+            
+            transform.SetParent(_lastParent);
+            
+            IsEnlarge = false;
+        }
+    }
+    
+    public void SetNewParent(Transform parent)
+    {
+        _lastParent = parent;
     }
 }

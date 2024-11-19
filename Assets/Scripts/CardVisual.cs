@@ -61,6 +61,7 @@ public class CardVisual : MonoBehaviour
         _parentCard = target;
         _cardTransform = target.transform;
         _startParent = transform.parent;
+        name = _parentCard.name + " Visual";
 
         //Event Listening
         _parentCard.PointerEnterEvent.AddListener(PointerEnter);
@@ -80,6 +81,9 @@ public class CardVisual : MonoBehaviour
 
         SmoothFollow();
         FollowRotation();
+        
+        if (_parentCard.IsEnlarge == true) return;
+        
         CardTilt();
     }
 
@@ -116,6 +120,8 @@ public class CardVisual : MonoBehaviour
 
     private void Select(CardMovement card, bool state)
     {
+        if (_parentCard.IsEnlarge == false) return;
+        
         DOTween.Kill(2, true);
         float dir = state ? 1 : 0;
         _shakeParent.DOPunchPosition(_shakeParent.up * _selectPunchAmount * dir, _scaleTransition, 10, 1);
@@ -124,11 +130,10 @@ public class CardVisual : MonoBehaviour
         if (_scaleAnimations)
             transform.DOScale(_scaleOnHover, _scaleTransition).SetEase(_scaleEase);
     }
-
-
+    
     private void BeginDrag(CardMovement card)
     {
-        if (_scaleAnimations)
+        if (_scaleAnimations && _parentCard.IsEnlarge == false)
             transform.DOScale(_scaleOnSelect, _scaleTransition).SetEase(_scaleEase);
 
         if (CardDraggedHandler.Instance == null)
@@ -148,7 +153,7 @@ public class CardVisual : MonoBehaviour
 
     private void PointerEnter(CardMovement card)
     {
-        if (_scaleAnimations)
+        if (_scaleAnimations && _parentCard.IsEnlarge == false)
             transform.DOScale(_scaleOnHover, _scaleTransition).SetEase(_scaleEase);
 
         DOTween.Kill(2, true);
@@ -157,19 +162,19 @@ public class CardVisual : MonoBehaviour
 
     private void PointerExit(CardMovement card)
     {
-        if (!_parentCard.WasDragged)
+        if (!_parentCard.WasDragged && _parentCard.IsEnlarge == false)
             transform.DOScale(1, _scaleTransition).SetEase(_scaleEase);
     }
 
     private void PointerUp(CardMovement card, bool longPress)
     {
-        if (_scaleAnimations)
+        if (_scaleAnimations && _parentCard.IsEnlarge == false)
             transform.DOScale(longPress ? _scaleOnHover : _scaleOnSelect, _scaleTransition).SetEase(_scaleEase);
     }
 
     private void PointerDown(CardMovement card)
     {
-        if (_scaleAnimations)
+        if (_scaleAnimations && _parentCard.IsEnlarge == false)
             transform.DOScale(_scaleOnSelect, _scaleTransition).SetEase(_scaleEase);
     }
 }

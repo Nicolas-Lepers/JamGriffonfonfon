@@ -669,9 +669,9 @@ RectTransform:
   - {fileID: 2049096523}
   - {fileID: 2074833275}
   - {fileID: 386683875}
-  - {fileID: 1246093957}
   - {fileID: 1401327622}
   - {fileID: 1389171972}
+  - {fileID: 1246093957}
   m_Father: {fileID: 6476167644552613311}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -682,6 +682,11 @@ RectTransform:
 --- !u!224 &807555912 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8781219906050295996, guid: 298c33d92262a1f4da20e034e280755e, type: 3}
+  m_PrefabInstance: {fileID: 6476167644552613310}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &1148322995 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5796628165103962779, guid: 298c33d92262a1f4da20e034e280755e, type: 3}
   m_PrefabInstance: {fileID: 6476167644552613310}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1148875879
@@ -786,6 +791,22 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2070564765085119699, guid: d7308de7c71e00242a062cfe196f459a, type: 3}
   m_PrefabInstance: {fileID: 312229160}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1246093958 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -4349074699098266967, guid: d7308de7c71e00242a062cfe196f459a, type: 3}
+  m_PrefabInstance: {fileID: 312229160}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e91ccffc526af4c8da0ef9ff34faf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!224 &1255452945 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8979743431860102921, guid: 298c33d92262a1f4da20e034e280755e, type: 3}
+  m_PrefabInstance: {fileID: 6476167644552613310}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1389171972 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2070564765085119699, guid: d7308de7c71e00242a062cfe196f459a, type: 3}
@@ -801,6 +822,22 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2070564765085119699, guid: d7308de7c71e00242a062cfe196f459a, type: 3}
   m_PrefabInstance: {fileID: 1148875879}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1442623327 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -4349074699098266967, guid: d7308de7c71e00242a062cfe196f459a, type: 3}
+  m_PrefabInstance: {fileID: 1148875879}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e91ccffc526af4c8da0ef9ff34faf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!224 &1460346430 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4533514743126647886, guid: 298c33d92262a1f4da20e034e280755e, type: 3}
+  m_PrefabInstance: {fileID: 6476167644552613310}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1544290115
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -812,6 +849,10 @@ PrefabInstance:
     - target: {fileID: 2180811660628596301, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
       propertyPath: m_Name
       value: GameManager_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2180811660628596301, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5253719614996086537, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
       propertyPath: _deckPos
@@ -826,25 +867,57 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 807555912}
     - target: {fileID: 5253719614996086537, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
+      propertyPath: _cardsDeck.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5253719614996086537, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
+      propertyPath: _cardsDeck.Array.data[0]
+      value: 
+      objectReference: {fileID: 1442623327}
+    - target: {fileID: 5253719614996086537, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
+      propertyPath: _cardsDeck.Array.data[1]
+      value: 
+      objectReference: {fileID: 1246093958}
+    - target: {fileID: 5253719614996086537, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
+      propertyPath: _cardsDeck.Array.data[2]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5253719614996086537, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
+      propertyPath: _cardsDeck.Array.data[3]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5253719614996086537, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
+      propertyPath: _cardsDeck.Array.data[4]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5253719614996086537, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
+      propertyPath: _cardsDeck.Array.data[5]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5253719614996086537, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
+      propertyPath: _cardsDeck.Array.data[6]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5253719614996086537, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
       propertyPath: _cardHotselTargetDefaultPos
       value: 
       objectReference: {fileID: 7246404674322846202, guid: b533a90e70050de42b6b9818e7d99d40, type: 3}
     - target: {fileID: 5253719614996086537, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
       propertyPath: _cardBarTargetPos.Array.data[0]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1460346430}
     - target: {fileID: 5253719614996086537, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
       propertyPath: _cardBarTargetPos.Array.data[1]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1609594555}
     - target: {fileID: 5253719614996086537, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
       propertyPath: _cardBarTargetPos.Array.data[2]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1148322995}
     - target: {fileID: 5253719614996086537, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
       propertyPath: _cardBarTargetPos.Array.data[3]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1255452945}
     - target: {fileID: 6034432348480484724, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.7941095
@@ -890,6 +963,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
+--- !u!224 &1609594555 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7441108910825145491, guid: 298c33d92262a1f4da20e034e280755e, type: 3}
+  m_PrefabInstance: {fileID: 6476167644552613310}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1778162183
 GameObject:
   m_ObjectHideFlags: 0
