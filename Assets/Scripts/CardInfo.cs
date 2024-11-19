@@ -6,5 +6,5 @@ using UnityEngine.UI;
 public class CardInfo : MonoBehaviour
 {
     public CardData CardDataRef;
-    public Image Image;
+    public CardMovement CardMovement;
 }

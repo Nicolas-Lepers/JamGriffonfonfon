@@ -167,3 +167,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CardDataRef: {fileID: 0}
+  CardMovement: {fileID: 6835082735651288779}
