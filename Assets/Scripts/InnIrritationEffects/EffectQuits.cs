@@ -5,7 +5,6 @@ public class EffectQuits : IIrrationEffect
 {
     public void ActivateEffect(int cardIndex)
     {
-        // PSEUDO CODE
-        // GameManager.Instance.QuitAt(cardIndex);
+         GameManager.Instance.CardLeaveInn(cardIndex);
     }
 }

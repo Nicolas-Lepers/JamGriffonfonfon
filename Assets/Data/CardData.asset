@@ -20,18 +20,18 @@ MonoBehaviour:
   <IsGoblin>k__BackingField: 0
   <BarIrritationCondition>k__BackingField: 0
   <InnIrritationCondition>k__BackingField:
-    rid: 4288743400620425247
+    rid: 4288743401154412559
   <IrritationEffect>k__BackingField:
-    rid: 4288743401154412557
+    rid: 4288743401154412563
   references:
     version: 2
     RefIds:
-    - rid: 4288743400620425247
+    - rid: 4288743401154412559
       type: {class: ConsumableNComparer, ns: , asm: Assembly-CSharp}
       data:
         <TargetConsumable>k__BackingField: 0
         <TargetAmount>k__BackingField: 0
         <ComparerType>k__BackingField: 0
-    - rid: 4288743401154412557
-      type: {class: EffectQuits, ns: , asm: Assembly-CSharp}
+    - rid: 4288743401154412563
+      type: {class: EffectQuitAllGoblins, ns: , asm: Assembly-CSharp}
       data: 

@@ -1,3 +1,4 @@
+using AntoineFoucault.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ using Random = UnityEngine.Random;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-  
+
 
     [SerializeField] Transform _canvasRef;
 
@@ -116,7 +117,6 @@ public class GameManager : MonoBehaviour
     public int GetNumberOfGolbin()
     {
         int count = 0;
-
         for (int i = 0; i < _cardsInn.Count; i++)
         {
             if (_cardsInn[i].CardDataRef.IsGoblin)
@@ -125,27 +125,60 @@ public class GameManager : MonoBehaviour
         return count;
     }
 
-    public int GetNumberOfFood()
+    public int GetNumberOfFood(bool needFollow = false)
     {
         int count = 0;
-
+        int bestGroup = 0;
         for (int i = 0; i < _cardsInn.Count; i++)
         {
-            if (_cardsInn[i].CardDataRef.Consumable == Consumable.FOOD)
+            if (_cardsInn[i].CardDataRef.Consumable == Consumable.FOOD && needFollow == false)
+            {
                 count++;
+                continue;
+            }
+
+            if (_cardsInn[i].CardDataRef.Consumable != Consumable.FOOD && needFollow == true)
+            {
+                if (count > bestGroup)
+                    bestGroup = count;
+                continue;
+            }
+            else if (_cardsInn[i].CardDataRef.Consumable == Consumable.FOOD && needFollow == true)
+                count++;
+
         }
-        return count;
+
+        if (needFollow == true)
+            return bestGroup;
+        else
+            return count;
     }
-    public int GetNumberOfBeer()
+    public int GetNumberOfBeer(bool needFollow = default)
     {
         int count = 0;
-
+        int bestGroup = 0;
         for (int i = 0; i < _cardsInn.Count; i++)
         {
-            if (_cardsInn[i].CardDataRef.Consumable == Consumable.BEER)
+            if (_cardsInn[i].CardDataRef.Consumable == Consumable.BEER && needFollow == false)
+            {
+                count++;
+                continue;
+            }
+
+            if (_cardsInn[i].CardDataRef.Consumable != Consumable.BEER && needFollow == true)
+            {
+                if (count > bestGroup)
+                    bestGroup = count;
+                continue;
+            }
+            else if (_cardsInn[i].CardDataRef.Consumable == Consumable.BEER && needFollow == true)
                 count++;
         }
-        return count;
+
+        if (needFollow == true)
+            return bestGroup;
+        else
+            return count;
     }
 
     public void SetCurrentCard(GameObject card)
@@ -163,7 +196,23 @@ public class GameManager : MonoBehaviour
             _cardsInn[i].CardDataRef.IrritationEffect.ActivateEffect(i);
         }
     }
+    public void ShuffleInnCardsInRange(int min, int max)
+    {
+        var cardsToShuffle = new List<CardInfo>();
+        for (int i = min; i <= max; i++)
+        {
+            if (i < 0 || i > _cardsInn.Count) continue;
+            cardsToShuffle.Add(_cardsInn[i]);
+        }
 
+        cardsToShuffle.Shuffle();
+
+        for (int i = min; i <= max; i++)
+        {
+            if (i < 0 || i > _cardsInn.Count) continue;
+            _cardsInn[i] = cardsToShuffle[i];
+        }
+    }
     public void AddCardInInn(CardInfo card)
     {
         _cardsInn.Add(card);
@@ -177,7 +226,22 @@ public class GameManager : MonoBehaviour
     {
         _cardsBar.Add(card);
     }
+    public void CardLeaveInn(int cardIndex)
+    {
+        _cardsInn.RemoveAt(cardIndex);
+    }
+    private CardInfo GetRandomCardInDeck()
+    {
+        return _cardsDeck[Random.Range(0, _cardsDeck.Count)];
+    }
 
+    public void AddCardFromDeskInInn(int index)
+    {
+        var randomCard = GetRandomCardInDeck();
+
+        AddCardInInnAtIndex(randomCard, index);
+        _cardsDeck.Remove(randomCard);
+    }
     /// <summary>
     /// Remove one card in inn to put in the bar
     /// </summary>
@@ -197,9 +261,21 @@ public class GameManager : MonoBehaviour
         _cardsInn.Remove(card);
     }
 
-    public void GoblinLeaveInn()
+    public void MoveFirstDeckCardToDiscardPile()
     {
+        _discardPile.Add(_cardsDeck[0]);
+        _cardsDeck.Remove(_cardsDeck[0]);
+    }
 
+    public void MoveAllCardInDeck()
+    {
+        for (int i = 0; i < _cardsBar.Count; i++)
+        {
+            int rand = Random.Range(0, _cardsDeck.Count);
+            _cardsDeck.Insert(rand, _cardsBar[i]);
+            _cardsBar.RemoveAt(i);
+            i--;
+        }
     }
 
     public void CardLeaveInnWithNeihgbourUp(CardInfo card, int nbNeihgbourUp)
@@ -254,6 +330,10 @@ public class GameManager : MonoBehaviour
     private int GetCardIndexInInn(CardInfo card)
     {
         return _cardsInn.IndexOf(card);
+    }
+    private CardInfo GetCardIndexInDeck(CardInfo card)
+    {
+        return _cardsDeck[Random.Range(0, _cardsDeck.Count)];
     }
 
     public CardInfo GetRandomCardInBar()
