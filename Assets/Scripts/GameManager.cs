@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
     public IEnumerator PhaseBar()
     {
         CanSelectedCard = true;
-
+        Debug.Log("bar");
         var wait = new WaitForSeconds(1);
         yield return wait;
 
@@ -104,19 +104,40 @@ public class GameManager : MonoBehaviour
             _cardsDeck.RemoveAt(rand);
 
             // cardInfo.GetComponent<CardMovement>()
-            cardInfo.transform.position = _cardBarTargetPos[cardsInBar].position;
+            if (_barIndexNul < 0)
+                cardInfo.transform.position = _cardBarTargetPos[cardsInBar].position;
+            else
+                cardInfo.transform.position = _cardBarTargetPos[_barIndexNul].position;
+
             cardInfo.gameObject.SetActive(true);
             yield return wait;
         }
 
-        for (int i = 0; i < _cardsBar.Count; i++)
+
+        if (_cardsInn.Count <= 0)
+            yield return null;
+
+        if (GetNumberOfBattleInBar() >= 3)
         {
-            //check all condition in bar
-            if (_cardsBar[i].CardDataRef.InnIrritationCondition.IsIrritated(i) == false)
-                continue;
-            _cardsBar[i].CardDataRef.IrritationEffect.ActivateEffect(i);
-            yield return wait;
+
         }
+        else if (GetNumberOfNoiseInBar() >= 3)
+        {
+
+        }
+        else if (GetNumberOfNoiseInBar() >= 3)
+        {
+
+        }
+
+        //for (int i = 0; i < _cardsBar.Count; i++)
+        //{
+        //    //check all condition in bar
+        //    if (_cardsBar[i].CardDataRef.BarIrritationCondition == false)
+        //        continue;
+        //    _cardsBar[i].CardDataRef.IrritationEffect.ActivateEffect(i);
+        //    yield return wait;
+        //}
     }
     public IEnumerator PhaseInn()
     {
@@ -134,8 +155,20 @@ public class GameManager : MonoBehaviour
             yield return wait;
         }
 
-        yield return StartCoroutine(PhaseBar());
+        StartCoroutine(PhaseBar());
     }
+
+    int _barIndexNul = -1;
+    public void PutCardInInn(CardInfo cardInfo)
+    {
+        _cardsInn.Add(cardInfo);
+        int value = GetCardIndexInBar(cardInfo);
+        _cardsBar[value] = null;
+        _barIndexNul = value;
+        //_cardsBar.Remove(cardInfo);
+        StartCoroutine(PhaseInn());
+    }
+
     public int GetNumberOfGolbin()
     {
         int count = 0;
@@ -203,12 +236,45 @@ public class GameManager : MonoBehaviour
         else
             return count;
     }
+    public int GetNumberOfBattleInBar()
+    {
+        int count = 0;
+        for (int i = 0; i < _cardsBar.Count; i++)
+        {
+            if (_cardsBar[i].CardDataRef.Nuisance == NuisanceType.BATTLE)
+                count++;
+        }
+        return count;
+    }
+
+    public int GetNumberOfSmellInBar()
+    {
+        int count = 0;
+        for (int i = 0; i < _cardsBar.Count; i++)
+        {
+            if (_cardsBar[i].CardDataRef.Nuisance == NuisanceType.SMELL)
+                count++;
+        }
+        return count;
+    }
+
+    public int GetNumberOfNoiseInBar()
+    {
+        int count = 0;
+        for (int i = 0; i < _cardsBar.Count; i++)
+        {
+            if (_cardsBar[i].CardDataRef.Nuisance == NuisanceType.NOISE)
+                count++;
+        }
+        return count;
+    }
+
 
     public void SetCurrentCard(GameObject card)
     {
         CurrentCardDragging = card;
     }
-   
+
     public void ShuffleInnCardsInRange(int min, int max)
     {
         var cardsToShuffle = new List<CardInfo>();
@@ -338,6 +404,10 @@ public class GameManager : MonoBehaviour
     private int GetCardIndexInInn(CardInfo card)
     {
         return _cardsInn.IndexOf(card);
+    }
+    private int GetCardIndexInBar(CardInfo card)
+    {
+        return _cardsBar.IndexOf(card);
     }
     private CardInfo GetCardIndexInDeck(CardInfo card)
     {
