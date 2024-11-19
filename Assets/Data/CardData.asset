@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Sprite>k__BackingField: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   <Name>k__BackingField: GOBLIN
-  <BroughtConsumable>k__BackingField: 0
-  <BroughtNuisance>k__BackingField: 0
+  <Consumable>k__BackingField: 0
+  <Nuisance>k__BackingField: 0
   <NuisancePower>k__BackingField: 1
   <IsGoblin>k__BackingField: 0
   <BarIrritationCondition>k__BackingField: 0
   <InnIrritationCondition>k__BackingField:
-    rid: 4288743400620425240
+    rid: 4288743400620425243
   <IrritationEffect>k__BackingField:
     rid: -2
   references:
@@ -28,7 +28,7 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 4288743400620425240
-      type: {class: ConsumableComparer, ns: , asm: Assembly-CSharp}
+    - rid: 4288743400620425243
+      type: {class: NextToNuisance, ns: , asm: Assembly-CSharp}
       data:
-        <FoodType>k__BackingField: 0
+        <Nuisance>k__BackingField: 0

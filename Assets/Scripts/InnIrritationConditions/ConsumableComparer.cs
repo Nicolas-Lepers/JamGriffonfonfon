@@ -5,7 +5,7 @@ using UnityEngine;
 [Serializable]
 public class ConsumableComparer : IIrritationCondition
 {
-    private Dictionary<ConsumableComparerType, Func<int, int, bool>> _foodTypeGetter =
+    private Dictionary<ConsumableComparerType, Func<int, int, bool>> _consumalbeTypeGetter =
         new Dictionary<ConsumableComparerType, Func<int, int, bool>>()
         {
             { ConsumableComparerType.MoreBeer, (beer, food) => beer > food },
@@ -22,6 +22,6 @@ public class ConsumableComparer : IIrritationCondition
         int beerAmount = 0;
         int foodAmount = 0;
         
-        return _foodTypeGetter[FoodType](beerAmount, foodAmount);
+        return _consumalbeTypeGetter[FoodType](beerAmount, foodAmount);
     }
 }

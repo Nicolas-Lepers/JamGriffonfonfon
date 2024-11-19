@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class FloorNComparer : IIrritationCondition
+public class GoblinNComparer : IIrritationCondition
 {
     private Dictionary<TargetComparerType, Func<int, int, bool>> _floorTypeGetter =
         new Dictionary<TargetComparerType, Func<int, int, bool>>()
@@ -15,11 +15,14 @@ public class FloorNComparer : IIrritationCondition
             { TargetComparerType.LowerThanTarget, (target, current) => current < target },
         };
 
-    [field:SerializeField] public int TargetFloor { get; private set; }
-    [field:SerializeField] public TargetComparerType ComparerType { get; private set; }
+    [field: SerializeField] public int TargetGoblinsAmount { get; private set; }
+    [field: SerializeField] public TargetComparerType ComparerType { get; private set; }
 
     public bool IsIrritated(int cardIndex)
     {
-        return _floorTypeGetter[ComparerType](TargetFloor, cardIndex);
+        // Get Goblins Amount from game manager
+        int goblinsAmount = 0;
+
+        return _floorTypeGetter[ComparerType](TargetGoblinsAmount, goblinsAmount);
     }
 }

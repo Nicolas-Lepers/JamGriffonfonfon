@@ -1,11 +1,8 @@
-namespace Enums
+public enum TargetComparerType
 {
-    public enum FloorComparerType
-    {
-        GreaterThanTargetFloor = 0,
-        GreaterOrEqualsThanTargetFloor = 1,
-        EqualsToTargetFloor = 2,
-        LowerOrEqualsThanTargetFloor = 3,
-        LowerThanTargetFloor = 4,
-    }
+    GreaterThanTarget = 0,
+    GreaterOrEqualsThanTarget = 1,
+    EqualsToTarget = 2,
+    LowerOrEqualsThanTarget = 3,
+    LowerThanTarget = 4,
 }
