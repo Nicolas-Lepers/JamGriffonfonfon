@@ -28,7 +28,6 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     public bool IsDragging { get; private set; }
 
     private Canvas _canvas;
-    private Vector3 _offset;
     private Image _imageComponent;
     private CardVisual _currentCardVisual;
     
@@ -53,9 +52,10 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
         if (IsDragging)
         {
-            Vector2 targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition) - _offset;
+            Vector2 targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
             Vector2 velocity = direction * Mathf.Min(moveSpeedLimit, Vector2.Distance(transform.position, targetPosition) / Time.deltaTime);
+            
             transform.Translate(velocity * Time.deltaTime);
         }
     }
@@ -66,6 +66,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         Vector3 clampedPosition = transform.position;
         clampedPosition.x = Mathf.Clamp(clampedPosition.x, -screenBounds.x, screenBounds.x);
         clampedPosition.y = Mathf.Clamp(clampedPosition.y, -screenBounds.y, screenBounds.y);
+        
         transform.position = new Vector3(clampedPosition.x, clampedPosition.y, 0);
     }
     
@@ -76,32 +77,29 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     public void OnBeginDrag(PointerEventData eventData)
     {
         BeginDragEvent.Invoke(this);
-        // Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        // offset = mousePosition - (Vector2)transform.position;
-        IsDragging = true;
-        _canvas.GetComponent<GraphicRaycaster>().enabled = false;
 
+        _canvas.GetComponent<GraphicRaycaster>().enabled = false;
         _imageComponent.raycastTarget = false;
 
+        IsDragging = true;
         WasDragged = true;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         EndDragEvent.Invoke(this);
-        IsDragging = false;
+
         _canvas.GetComponent<GraphicRaycaster>().enabled = true;
-
         _imageComponent.raycastTarget = true;
-
+        
+        IsDragging = false;
+        
         StartCoroutine(FrameWait());
-
         IEnumerator FrameWait()
         {
             yield return new WaitForEndOfFrame();
             WasDragged = false;
         }
-        
     }
 
     public void OnPointerEnter(PointerEventData eventData)

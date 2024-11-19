@@ -59,7 +59,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -148,7 +148,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 150, y: 200}
+  m_SizeDelta: {x: 250, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8646238460493749567
 CanvasRenderer:
@@ -175,10 +175,10 @@ MonoBehaviour:
   _cardImage: {fileID: 2669176176056372151}
   _followSpeed: 30
   _rotationAmount: 20
-  _rotationSpeed: 20
-  _autoTiltAmount: 30
-  _manualTiltAmount: 20
-  _tiltSpeed: 20
+  _rotationSpeed: 18
+  _autoTiltAmount: 18
+  _manualTiltAmount: 30
+  _tiltSpeed: 8
   _scaleAnimations: 1
   _scaleOnHover: 1.15
   _scaleOnSelect: 1.25
