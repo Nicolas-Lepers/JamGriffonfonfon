@@ -1,5 +1,10 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Prefabs.meta
+guid: b55edb227640cd24e97545d551c074cd
+folderAsset: yes
+========
 guid: ee802291caf2da74a8f378b448b0834c
+>>>>>>>> main:Assets/Scenes/CardMovTest.unity.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
