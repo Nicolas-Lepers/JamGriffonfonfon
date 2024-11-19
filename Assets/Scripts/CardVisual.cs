@@ -11,6 +11,8 @@ using UnityEngine.Serialization;
 
 public class CardVisual : MonoBehaviour
 {
+    public Image CardImage => _cardImage;
+    
     [Header("References")]
     [SerializeField] private Transform _shakeParent;
     [SerializeField] private Transform _tiltParent;
