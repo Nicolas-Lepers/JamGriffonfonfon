@@ -60,6 +60,8 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
             _currentCardVisual = Instantiate(_cardVisualPrefab, CardVisualHandler.Instance.transform);
             _currentCardVisual.Initialize(this);
         }
+        
+        _lastPos = transform.position;
     }
     void Update()
     {
@@ -93,6 +95,8 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
             if(blockSelected == false)
                 CanBeSelected = true;
         });
+        
+        _lastPos = point;
     }
     public void OnDrag(PointerEventData eventData)
     {
@@ -131,7 +135,8 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         _imageComponent.raycastTarget = true;
         
         IsDragging = false;
-        
+        transform.position = _lastPos;
+
         StartCoroutine(FrameWait());
         IEnumerator FrameWait()
         {
@@ -152,8 +157,8 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     {
         if (IsEnlarge) return;
 
-        print("pointer exit");
         PointerExitEvent.Invoke(this);
+        transform.position = _lastPos;
         IsHovering = false;
     }
 
@@ -185,7 +190,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     {
         if (IsDragging) return;
 
-        _lastPos = transform.position;
+        // _lastPos = transform.position;
         Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
         Vector3 worldCenter = Camera.main.ScreenToWorldPoint(screenCenter);
         worldCenter.z = 0; // Ensure the z position is 0 to keep it on the same plane
@@ -219,8 +224,8 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         }
     }
     
-    public void SetNewParent(Transform parent)
+    public void SetNewBasePos(Vector3 newPos)
     {
-        _lastParent = parent;
+        _lastPos = newPos;
     }
 }

@@ -17,6 +17,7 @@ public class CardVisual : MonoBehaviour
     [SerializeField] private Transform _shakeParent;
     [SerializeField] private Transform _tiltParent;
     [SerializeField] private Image _cardImage;
+    [SerializeField] private Transform _shadowTransform;
     
     [Header("Follow Parameters")]
     [SerializeField] private float _followSpeed = 30;
