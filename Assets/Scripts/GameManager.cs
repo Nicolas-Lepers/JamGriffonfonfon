@@ -1,3 +1,4 @@
+using AntoineFoucault.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -163,7 +164,23 @@ public class GameManager : MonoBehaviour
             _cardsInn[i].CardDataRef.IrritationEffect.ActivateEffect(i);
         }
     }
+    public void ShuffleInnCardsInRange(int min, int max)
+    {
+        var cardsToShuffle = new List<CardInfo>();
+        for (int i = min; i <= max; i++)
+        {
+            if (i < 0 || i > _cardsInn.Count) continue;
+            cardsToShuffle.Add(_cardsInn[i]);
+        }
 
+        cardsToShuffle.Shuffle();
+
+        for (int i = min; i <= max; i++)
+        {
+            if (i < 0 || i > _cardsInn.Count) continue;
+            _cardsInn[i] = cardsToShuffle[i];
+        }
+    }
     public void AddCardInInn(CardInfo card)
     {
         _cardsInn.Add(card);
@@ -254,6 +271,10 @@ public class GameManager : MonoBehaviour
     private int GetCardIndexInInn(CardInfo card)
     {
         return _cardsInn.IndexOf(card);
+    }
+    private CardInfo GetCardIndexInDeck(CardInfo card)
+    {
+        return _cardsDeck[Random.Range(0, _cardsDeck.Count)];
     }
 
     public CardInfo GetRandomCardInBar()
