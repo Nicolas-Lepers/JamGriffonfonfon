@@ -54,7 +54,7 @@ public class CardVisual : MonoBehaviour
     private float _curveRotationOffset;
     private float _curveYOffset;
     private bool _initalize = false;
-
+    
     public void Initialize(CardMovement target)
     {
         //Declarations
@@ -71,30 +71,16 @@ public class CardVisual : MonoBehaviour
         _parentCard.PointerUpEvent.AddListener(PointerUp);
         _parentCard.SelectEvent.AddListener(Select);
 
-        //Initialization
         _initalize = true;
-    }
-
-    public void UpdateIndex(int length)
-    {
-        transform.SetSiblingIndex(_parentCard.transform.parent.GetSiblingIndex());
     }
 
     void Update()
     {
         if (!_initalize || _parentCard == null) return;
 
-        HandPositioning();
         SmoothFollow();
         FollowRotation();
-        // CardTilt();
-    }
-
-    private void HandPositioning()
-    {
-        // curveYOffset = (curve.positioning.Evaluate(parentCard.NormalizedPosition()) * curve.positioningInfluence) * parentCard.SiblingAmount();
-        // curveYOffset = parentCard.SiblingAmount() < 5 ? 0 : curveYOffset;
-        // curveRotationOffset = curve.rotation.Evaluate(parentCard.NormalizedPosition());
+        CardTilt();
     }
 
     private void SmoothFollow()
@@ -118,22 +104,14 @@ public class CardVisual : MonoBehaviour
 
     private void CardTilt()
     {
-        // savedIndex = parentCard.isDragging ? savedIndex : parentCard.ParentIndex();
-        float sine = Mathf.Sin(Time.time + _savedIndex) * (_parentCard.IsHovering ? .2f : 1);
-        float cosine = Mathf.Cos(Time.time + _savedIndex) * (_parentCard.IsHovering ? .2f : 1);
+        _savedIndex = _parentCard.IsDragging ? 0 : 1;
+        float sine = Mathf.Sin(Time.time + _savedIndex) * (_parentCard.IsDragging ? 0 : 1);
+        float cosine = Mathf.Cos(Time.time + _savedIndex) * (_parentCard.IsDragging ? 0 : 1);
 
-        Vector3 offset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        float tiltX = _parentCard.IsHovering ? ((offset.y * -1) * _manualTiltAmount) : 0;
-        float tiltY = _parentCard.IsHovering ? ((offset.x) * _manualTiltAmount) : 0;
-        // float tiltZ = parentCard.isDragging ? tiltParent.eulerAngles.z : (curveRotationOffset * (curve.rotationInfluence * parentCard.SiblingAmount()));
+        float lerpX = Mathf.LerpAngle(_tiltParent.eulerAngles.x, sine * _autoTiltAmount, _tiltSpeed * Time.deltaTime);
+        float lerpY = Mathf.LerpAngle(_tiltParent.eulerAngles.y, cosine * _autoTiltAmount, _tiltSpeed * Time.deltaTime);
 
-        float lerpX = Mathf.LerpAngle(_tiltParent.eulerAngles.x, tiltX + (sine * _autoTiltAmount),
-            _tiltSpeed * Time.deltaTime);
-        float lerpY = Mathf.LerpAngle(_tiltParent.eulerAngles.y, tiltY + (cosine * _autoTiltAmount),
-            _tiltSpeed * Time.deltaTime);
-        // float lerpZ = Mathf.LerpAngle(tiltParent.eulerAngles.z, tiltZ, tiltSpeed / 2 * Time.deltaTime);
-
-        // tiltParent.eulerAngles = new Vector3(lerpX, lerpY, lerpZ);
+        _tiltParent.eulerAngles = new Vector3(lerpX, lerpY, _tiltParent.eulerAngles.z);
     }
 
     private void Select(CardMovement card, bool state)

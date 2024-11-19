@@ -8,11 +8,18 @@ public class NextToConsumable : IIrritationCondition
 
     public bool IsIrritated(int cardIndex)
     {
-        // PSEUDO CODE
-        //var previousCard = MainGame.Instance.GetCard(cardIndex+1);
-        //var nextCard = MainGame.Instance.GetCard(cardIndex-1);
-        //return previousCard.Consumable == Consumable || nextCard.Consumable == Consumable;
-
-        return true;
+        var hasPreviousCard = false;
+        if (cardIndex < GameManager.Instance.CardsInn.Count - 1)
+        {
+            var previousCard = GameManager.Instance.CardsInn[cardIndex+1];
+            hasPreviousCard = previousCard.Consumable == Consumable;
+        }
+        var hasNextCard = false;
+        if (cardIndex > 0)
+        {
+            var nextCard = GameManager.Instance.CardsInn[cardIndex-1];
+            hasNextCard = nextCard.Consumable == Consumable;
+        }
+        return hasPreviousCard || hasNextCard;
     }
 }

@@ -8,11 +8,18 @@ public class NextToNuisance : IIrritationCondition
 
     public bool IsIrritated(int cardIndex)
     {
-        // PSEUDO CODE
-        //var previousCard = MainGame.Instance.GetCard(cardIndex+1);
-        //var nextCard = MainGame.Instance.GetCard(cardIndex-1);
-        //return previousCard.Nuisance == Nuisance || nextCard.Nuisance == Nuisance;
-
-        return true;
+        var hasPreviousCard = false;
+        if (cardIndex < GameManager.Instance.CardsInn.Count - 1)
+        {
+            var previousCard = GameManager.Instance.CardsInn[cardIndex+1];
+            hasPreviousCard = previousCard.Nuisance == Nuisance;
+        }
+        var hasNextCard = false;
+        if (cardIndex > 0)
+        {
+            var nextCard = GameManager.Instance.CardsInn[cardIndex-1];
+            hasNextCard = nextCard.Nuisance == Nuisance;
+        }
+        return hasPreviousCard || hasNextCard;
     }
 }
