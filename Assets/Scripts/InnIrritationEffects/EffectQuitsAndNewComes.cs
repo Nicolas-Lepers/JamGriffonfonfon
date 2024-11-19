@@ -14,10 +14,8 @@ public class EffectQuitsAndNewComes : IIrrationEffect
     
     public void ActivateEffect(int cardIndex)
     {
-        // PSEUDO CODE
-        // GameManager.Instance.QuitAt(cardIndex);
-        // var newCard = GameManager.Instance.GetFirstFromDeck();
-        // var index = Position == SAME ? cardIndex : 0;
-        // GameManager.Instance.InsertCardAt(cardIndex);
+        GameManager.Instance.CardLeaveInn(cardIndex);
+         var index = Position == PositionType.SAME ? cardIndex : 0;
+         GameManager.Instance.AddCardFromDeskInInn(index);
     }
 }

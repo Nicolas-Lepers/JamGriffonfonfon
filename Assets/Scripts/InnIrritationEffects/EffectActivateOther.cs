@@ -8,9 +8,8 @@ public class EffectActivateOther : IIrrationEffect
 
     public void ActivateEffect(int cardIndex)
     {
-        // PSEUDO CODE
-        // var index = cardIndex+OtherOffset;
-        // var other = MainGame.Instance.GetCardAt(index);
-        // other.ActivateEffect(index);
+         var index = cardIndex+OtherOffset;
+         var other = GameManager.Instance.CardsInn[index];
+         other.CardDataRef.IrritationEffect.ActivateEffect(index);
     }
 }
