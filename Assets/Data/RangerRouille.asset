@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1d11cd1eb9a26e4a85312edb87d31b9, type: 3}
   m_Name: RangerRouille
   m_EditorClassIdentifier: 
-  <Sprite>k__BackingField: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  <Sprite>k__BackingField: {fileID: 21300000, guid: ae5757ec69cc9f24d9400cb5736a86af, type: 3}
   <Name>k__BackingField: "Le Ranger rouill\xE9"
   <Consumable>k__BackingField: 0
   <Nuisance>k__BackingField: 0

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1d11cd1eb9a26e4a85312edb87d31b9, type: 3}
   m_Name: OursGuerre
   m_EditorClassIdentifier: 
-  <Sprite>k__BackingField: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  <Sprite>k__BackingField: {fileID: 21300000, guid: 3eca2f17155f3ec4d9408e2887b5047c, type: 3}
   <Name>k__BackingField: L'Ours de guerre
   <Consumable>k__BackingField: 0
   <Nuisance>k__BackingField: 0
