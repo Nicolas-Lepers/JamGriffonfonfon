@@ -1,14 +1,6 @@
 using AntoineFoucault.Utilities;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.Burst.Intrinsics;
-using Unity.VisualScripting;
-using UnityEditor.Networking.PlayerConnection;
-using UnityEditor.PackageManager;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
@@ -296,20 +288,15 @@ public class GameManager : MonoBehaviour
         _cardsInn.Remove(card);
     }
 
-    public void CheckNuisance(CardInfo card)
+    public void CheckNuisance(NuisanceType nuisanceToCheck)
     {
-        CardLeaveInn(card);
-
-        NuisanceType nuisance = card.CardDataRef.Nuisance;
-
         for (int i = _cardsInn.Count - 1; i >= 0; i--)
         {
             CardData cardData = _cardsInn[i].CardDataRef;
-            if ((int)cardData.Nuisance != (int)cardData.BarIrritationCondition)
+            if ((int)nuisanceToCheck != (int)cardData.BarIrritationCondition)
                 continue;
 
             cardData.IrritationEffect.ActivateEffect(i);
-            CheckNuisance(_cardsInn[i]);
         }
     }
 

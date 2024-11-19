@@ -5,8 +5,7 @@ public class EffectQuitsFirstFromDeckQuits : IIrrationEffect
 {
     public void ActivateEffect(int cardIndex)
     {
-        // PSEUDO CODE
-        // GameManager.Instance.QuitAt(cardIndex);
-        // GameManager.Instance.RemoveFirstFromDeck();
+        GameManager.Instance.CardLeaveInn(cardIndex);
+        GameManager.Instance.MoveFirstDeckCardToDiscardPile();
     }
 }
