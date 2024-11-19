@@ -22,9 +22,8 @@ public class ConsumableNComparer : IIrritationCondition
     
     public bool IsIrritated(int cardIndex)
     {
-        // Get Amount from Game Manager instead of 0
-        int beerAmount = 0;
-        int foodAmount = 0;
+        int beerAmount = GameManager.Instance.GetNumberOfBeer();
+        int foodAmount = GameManager.Instance.GetNumberOfFood();
         var currentConsumable = TargetConsumable == Consumable.BEER ? beerAmount : foodAmount;
         
         return _floorTypeGetter[ComparerType](TargetAmount, currentConsumable);

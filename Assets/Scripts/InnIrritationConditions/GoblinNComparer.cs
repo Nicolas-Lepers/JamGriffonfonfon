@@ -20,8 +20,7 @@ public class GoblinNComparer : IIrritationCondition
 
     public bool IsIrritated(int cardIndex)
     {
-        // Get Goblins Amount from game manager
-        int goblinsAmount = 0;
+        int goblinsAmount = GameManager.Instance.GetNumberOfGolbin();
 
         return _floorTypeGetter[ComparerType](TargetGoblinsAmount, goblinsAmount);
     }

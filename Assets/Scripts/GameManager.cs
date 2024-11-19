@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst.Intrinsics;
+using Unity.VisualScripting;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -32,26 +34,30 @@ public class GameManager : MonoBehaviour
     [SerializeField] Transform _deckPos;
 
     [SerializeField] List<Transform> _cardBarTargetPos = new List<Transform>();
-    [SerializeField] Transform _cardHotselTargetDefaultPos;
-    [SerializeField] float _offsetPosCardHostel = 0.5f;
+    [SerializeField] Transform _cardInnTargetDefaultPos;
+    [SerializeField] float _offsetPosCardInn = 0.5f;
 
     [SerializeField] GameObject _prefabCardVisual;
     private List<CardInfo> _cardsQueue = new List<CardInfo>();
 
 
     [Header("Cards")]
-    [SerializeField] List<CardData> _cardsHostel = new List<CardData>();
+    [SerializeField] List<CardData> _cardsInn = new List<CardData>();
     [SerializeField] List<CardData> _cardsBar = new List<CardData>();
     [SerializeField] List<CardData> _cardsDeck = new List<CardData>();
     [SerializeField] List<CardData> _discardPile = new List<CardData>();
 
-    public List<CardData> CardsHostel => _cardsHostel;
+    public List<CardData> CardsInn => _cardsInn;
     public List<CardData> CardsBar => _cardsBar;
     public List<CardData> CardsDeck => _cardsDeck;
 
 
     [SerializeField] int _numnerCardInDiscardPileToLose = 8;
-    [SerializeField] int _numberCardInHostelToWin = 7;
+    [SerializeField] int _numberCardInInnToWin = 7;
+    private int _beerCount = 0;
+    private int _foodCount = 0;
+    private int _beerNeighborCount = 0;
+    private int _foodNeighborCount = 0;
 
     private void Start()
     {
@@ -74,7 +80,7 @@ public class GameManager : MonoBehaviour
         if (_cardsDeck.Count >= 0)
             return;
 
-        if (_cardsHostel.Count < _numberCardInHostelToWin)
+        if (_cardsInn.Count < _numberCardInInnToWin)
         {
             Debug.Log("Loser");
             return;
@@ -107,27 +113,68 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < _cardsBar.Count; i++)
         {
             //check all condition in bar
-            Debug.Log("Condition for all cards");
+            if (_cardsBar[i].InnIrritationCondition.IsIrritated(i))
+            {
+                _cardsBar[i].IrritationEffect.ActivateEffect(i);
+            }
         }
     }
 
-    public void PhaseHostel()
+    public int GetNumberOfGolbin()
     {
-        for (int i = 0; i < _cardsHostel.Count; i++)
+        int count = 0;
+
+        for (int i = 0; i < _cardsInn.Count; i++)
         {
-            //check consequance in hostel
-            Debug.Log("Condition for all cards");
+            if (_cardsInn[i].IsGoblin)
+                count++;
+        }
+        return count;
+    }
+
+    public int GetNumberOfFood()
+    {
+        int count = 0;
+
+        for (int i = 0; i < _cardsInn.Count; i++)
+        {
+            if (_cardsInn[i].Consumable == Consumable.FOOD)
+                count++;
+        }
+        return count;
+    }
+    public int GetNumberOfBeer()
+    {
+        int count = 0;
+
+        for (int i = 0; i < _cardsInn.Count; i++)
+        {
+            if (_cardsInn[i].Consumable == Consumable.BEER)
+                count++;
+        }
+        return count;
+    }
+
+    public void PhaseInn()
+    {
+        for (int i = 0; i < _cardsInn.Count; i++)
+        {
+            //check consequance in Inn
+            if (_cardsInn[i].InnIrritationCondition.IsIrritated(i))
+            {
+                _cardsInn[i].IrritationEffect.ActivateEffect(i);
+            }
         }
     }
 
-    public void AddCardInHostel(CardData card)
+    public void AddCardInInn(CardData card)
     {
-        _cardsHostel.Add(card);
+        _cardsInn.Add(card);
     }
 
-    public void AddCardInHostelAtIndex(CardData card, int index)
+    public void AddCardInInnAtIndex(CardData card, int index)
     {
-        _cardsHostel.Insert(index, card);
+        _cardsInn.Insert(index, card);
     }
     public void AddCardToBar(CardData card)
     {
@@ -135,33 +182,60 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Remove one card in hostel to put in the bar
+    /// Remove one card in inn to put in the bar
     /// </summary>
     public void ReplaceCardToBar(CardData card)
     {
-        if (_cardsHostel.Contains(card) == false)
+        if (_cardsInn.Contains(card) == false)
             return;
 
-        _cardsHostel.Remove(card);
+        _cardsInn.Remove(card);
         _cardsBar.Add(card);
     }
 
-    public void SwitchCard(CardData card, int index)
+    public void CardLeaveInn(CardData card)
     {
-        CardData temp = _cardsHostel[index];
-        int targetIndex = GetCardIndexInHostel(temp);
-        _cardsHostel[index] = card;
-        _cardsHostel[targetIndex] = temp;
+        if (_cardsInn.Contains(card) == false) return;
+
+        _cardsInn.Remove(card);
     }
 
-    private int GetCardIndexInHostel(CardData card)
+    public void CardLeaveInnWithNeihgbourUp(CardData card, int nbNeihgbourUp)
     {
-        return _cardsHostel.IndexOf(card);
+        if (_cardsInn.Contains(card) == false) return;
+
+        int value = GetCardIndexInInn(card);
+
+        for (int i = nbNeihgbourUp - 1; i >= 0; i--)
+        {
+            CardData cardNeihgbour = _cardsInn[value + i];
+            CardLeaveInn(cardNeihgbour);
+        }
+
+        _cardsInn.Remove(card);
+    }
+
+    
+
+
+    public void SwitchCard(CardData card, int index)
+    {
+        CardData temp = _cardsInn[index];
+        int targetIndex = GetCardIndexInInn(temp);
+        _cardsInn[index] = card;
+        _cardsInn[targetIndex] = temp;
+    }
+
+    private int GetCardIndexInInn(CardData card)
+    {
+        return _cardsInn.IndexOf(card);
     }
 
     public CardData GetRandomCardInBar()
     {
         return _cardsBar[Random.Range(0, _cardsBar.Count)];
     }
+
+
 
 }
