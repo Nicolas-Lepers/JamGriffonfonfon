@@ -17,13 +17,12 @@ public class CardHolderInn : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private List<CardMovement> _cardsInn = new List<CardMovement>();
     
     [SerializeField] private float _offsetPosYCardInn = 3f;
-    private float _topYLimit = 200f;
+    [SerializeField] private float _topYLimit;
 
     private void Awake()
     {
         Instance = this;
     }
-
     public void OnPointerEnter(PointerEventData eventData)
     {
         IsEnteredInn = true;
@@ -38,11 +37,29 @@ public class CardHolderInn : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         _cardsInn.Add(card);
         card.gameObject.transform.SetParent(_parentCardInn);
+        card.transform.SetSiblingIndex(0);
         card.CardVisual.transform.SetSiblingIndex(0);
+
+        float totalHeight = _offsetPosYCardInn * _cardsInn.Count;
+        if (totalHeight > _topYLimit)
+        {
+            _offsetPosYCardInn = _topYLimit / _cardsInn.Count;
+        }
 
         for (int i = 0; i < _cardsInn.Count; i++)
         {
             _cardsInn[i].MoveToPoint(_parentCardInn.position + new Vector3(0, _offsetPosYCardInn * i, 0));
         }
+    }
+    
+    private void OnDrawGizmos()
+    {
+        if (_parentCardInn == null) return;
+
+        Vector3 start = _parentCardInn.position;
+        Vector3 end = new Vector3(start.x, start.y + _topYLimit, start.z);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(start, end);
     }
 }
