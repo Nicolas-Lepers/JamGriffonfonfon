@@ -57,6 +57,7 @@ public class CardVisual : MonoBehaviour
     private float _curveRotationOffset;
     private float _curveYOffset;
     private bool _initalize = false;
+    private Vector3 _shadowLocalStartPos;
     
     public void Initialize(CardMovement target)
     {
@@ -65,6 +66,7 @@ public class CardVisual : MonoBehaviour
         _cardTransform = target.transform;
         _startParent = transform.parent;
         name = _parentCard.name + " Visual";
+        _shadowLocalStartPos = _shadowTransform.localPosition;
 
         //Event Listening
         _parentCard.PointerEnterEvent.AddListener(PointerEnter);
@@ -139,6 +141,8 @@ public class CardVisual : MonoBehaviour
         if (_scaleAnimations && _parentCard.IsEnlarge == false)
             transform.DOScale(_scaleOnSelect, _scaleTransition).SetEase(_scaleEase);
 
+        _shadowTransform.DOLocalMoveY(_shadowLocalStartPos.y - 30, _scaleTransition).SetEase(_scaleEase);
+        
         if (CardDraggedHandler.Instance == null)
         {
             Debug.LogWarning("CardDraggedHandler is missing from the scene.");
@@ -150,7 +154,8 @@ public class CardVisual : MonoBehaviour
     private void EndDrag(CardMovement card)
     {
         transform.DOScale(1, _scaleTransition).SetEase(_scaleEase);
-        
+        _shadowTransform.DOLocalMoveY(_shadowLocalStartPos.y, _scaleTransition).SetEase(_scaleEase);
+
         transform.SetParent(_startParent);
     }
 
