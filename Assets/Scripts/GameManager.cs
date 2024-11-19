@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst.Intrinsics;
@@ -6,28 +7,13 @@ using UnityEditor.Networking.PlayerConnection;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
-
-    static GameManager _instance;
-
-    public static GameManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = new GameManager();
-            }
-            else
-            {
-                Debug.LogError("2 GameManager");
-            }
-
-            return _instance;
-        }
-    }
+    public static GameManager Instance;
+  
 
     [SerializeField] Transform _canvasRef;
 
@@ -48,7 +34,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] List<CardInfo> _cardsDeck = new List<CardInfo>();
     [SerializeField] List<CardInfo> _discardPile = new List<CardInfo>();
 
-    public GameObject CurrentCard = null;
+    public GameObject CurrentCardDragging { get; private set; }
     public List<CardInfo> CardsInn => _cardsInn;
     public List<CardInfo> CardsBar => _cardsBar;
     public List<CardInfo> CardsDeck => _cardsDeck;
@@ -60,6 +46,11 @@ public class GameManager : MonoBehaviour
     private int _foodCount = 0;
     private int _beerNeighborCount = 0;
     private int _foodNeighborCount = 0;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -157,7 +148,10 @@ public class GameManager : MonoBehaviour
         return count;
     }
 
-
+    public void SetCurrentCard(GameObject card)
+    {
+        CurrentCardDragging = card;
+    }
     public void PhaseInn()
     {
         for (int i = 0; i < _cardsInn.Count; i++)

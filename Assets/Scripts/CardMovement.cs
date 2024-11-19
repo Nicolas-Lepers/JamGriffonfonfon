@@ -77,6 +77,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     public void OnBeginDrag(PointerEventData eventData)
     {
         BeginDragEvent.Invoke(this);
+        GameManager.Instance.SetCurrentCard(gameObject);
 
         // _canvas.GetComponent<GraphicRaycaster>().enabled = false;
         _imageComponent.raycastTarget = false;
@@ -88,6 +89,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     public void OnEndDrag(PointerEventData eventData)
     {
         EndDragEvent.Invoke(this);
+        // GameManager.Instance.CurrentCard = null;
 
         _canvas.GetComponent<GraphicRaycaster>().enabled = true;
         _imageComponent.raycastTarget = true;

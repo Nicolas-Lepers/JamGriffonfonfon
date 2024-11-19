@@ -7,7 +7,11 @@ public class CardHolder : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 {
     public void OnPointerEnter(PointerEventData eventData)
     {
-        print("enter auberge");
+        if (GameManager.Instance.CurrentCardDragging != null)
+        {
+            print("heklo");
+        }
+        print($"enter auberge : {GameManager.Instance.CurrentCardDragging}");
     }
 
     public void OnPointerExit(PointerEventData eventData)
