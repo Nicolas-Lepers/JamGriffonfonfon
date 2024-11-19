@@ -26,75 +26,110 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    [SerializeField] Transform _canvasRef;
+
+    [SerializeField] Transform _discardPilePos;
+    [SerializeField] Transform _deckPos;
 
     [SerializeField] List<Transform> _cardBarTargetPos = new List<Transform>();
     [SerializeField] Transform _cardHotselTargetDefaultPos;
     [SerializeField] float _offsetPosCardHostel = 0.5f;
 
+    [SerializeField] GameObject _prefabCardVisual;
+    private List<CardInfo> _cardsQueue = new List<CardInfo>();
+
+
     [Header("Cards")]
-    [SerializeField] List<GameObject> _cardsHostel = new List<GameObject>();
-    [SerializeField] List<GameObject> _cardsBar = new List<GameObject>();
-    [SerializeField] List<GameObject> _cardsDeck = new List<GameObject>();
+    [SerializeField] List<CardData> _cardsHostel = new List<CardData>();
+    [SerializeField] List<CardData> _cardsBar = new List<CardData>();
+    [SerializeField] List<CardData> _cardsDeck = new List<CardData>();
+    [SerializeField] List<CardData> _discardPile = new List<CardData>();
 
-    public List<GameObject> CardsHostel => _cardsHostel;
-    public List<GameObject> CardsBar => _cardsBar;
-    public List<GameObject> CardsDeck => _cardsDeck;
+    public List<CardData> CardsHostel => _cardsHostel;
+    public List<CardData> CardsBar => _cardsBar;
+    public List<CardData> CardsDeck => _cardsDeck;
 
-    //lose condition = 8 cartes dans la défausse (parti)
-    //win condition = 7 cartes + dans l'auberge
-    //end condition = plus de cartes dans la pioche
 
-    public bool _barPhase = true;
+    [SerializeField] int _numnerCardInDiscardPileToLose = 8;
+    [SerializeField] int _numberCardInHostelToWin = 7;
 
-    private void Update()
+    private void Start()
     {
-        RunGame();
+        for (int i = 0; i < _cardsDeck.Count; i++)
+        {
+            GameObject go = Instantiate(_prefabCardVisual, _deckPos.transform.position, Quaternion.identity, _deckPos);
+            //go.SetActive(false);
+
+            if (go.TryGetComponent(out CardInfo card) != false)
+                _cardsQueue.Add(card);
+        }
+
+        PhaseBar();
     }
-
-    private void RunGame()
+    public void CheckEndGame()
     {
-        if (_barPhase)
+        if (_discardPile.Count >= _numnerCardInDiscardPileToLose)
+            Debug.Log("Loser");
+
+        if (_cardsDeck.Count >= 0)
+            return;
+
+        if (_cardsHostel.Count < _numberCardInHostelToWin)
+        {
+            Debug.Log("Loser");
+            return;
+        }
+        Debug.Log("Winer");
+
+    }
+    public void PhaseBar()
+    {
+        while (_cardsBar.Count < 4)
         {
             int cardsInBar = _cardsBar.Count;
-            while (cardsInBar < 3)
-            {
-                int rand = Random.Range(0, _cardsDeck.Count);
+            CardInfo cardInfo = _cardsQueue[_cardsQueue.Count - 1];
+            _cardsQueue.RemoveAt(_cardsQueue.Count - 1);
 
-                //add to bar
-                _cardsBar.Add(CardsDeck[rand]);
+            int rand = Random.Range(0, _cardsDeck.Count - 1);
 
-                //remove from deck
-                _cardsDeck.RemoveAt(rand);
+            //add to bar
+            CardData cardData = _cardsDeck[rand];
+            _cardsBar.Add(cardData);
 
-                Debug.Log($"add card {cardsInBar}");
-            }
+            //remove from deck
+            _cardsDeck.RemoveAt(rand);
 
-            for (int i = 0; i < cardsInBar; i++)
-            {
-                //check all condition in bar
-            }
-
+            cardInfo.CardDataRef = cardData;
+            cardInfo.transform.position = _cardBarTargetPos[cardsInBar].position;
+            cardInfo.gameObject.SetActive(true);
         }
-        else
+
+        for (int i = 0; i < _cardsBar.Count; i++)
         {
-            for (int i = 0; i < _cardsHostel.Count; i++)
-            {
-                //check consequance in hostel
-
-            }
-
+            //check all condition in bar
+            Debug.Log("Condition for all cards");
         }
     }
-    public void AddCardInHostel(GameObject card)
+
+    public void PhaseHostel()
+    {
+        for (int i = 0; i < _cardsHostel.Count; i++)
+        {
+            //check consequance in hostel
+            Debug.Log("Condition for all cards");
+        }
+    }
+
+    public void AddCardInHostel(CardData card)
     {
         _cardsHostel.Add(card);
     }
 
-    public void AddCardInHostelAtIndex(GameObject card, int index)
+    public void AddCardInHostelAtIndex(CardData card, int index)
     {
         _cardsHostel.Insert(index, card);
     }
-    public void AddCardToBar(GameObject card)
+    public void AddCardToBar(CardData card)
     {
         _cardsBar.Add(card);
     }
@@ -102,7 +137,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Remove one card in hostel to put in the bar
     /// </summary>
-    public void ReplaceCardToBar(GameObject card)
+    public void ReplaceCardToBar(CardData card)
     {
         if (_cardsHostel.Contains(card) == false)
             return;
@@ -111,20 +146,20 @@ public class GameManager : MonoBehaviour
         _cardsBar.Add(card);
     }
 
-    public void SwitchCard(GameObject card,int index)
+    public void SwitchCard(CardData card, int index)
     {
-        var temp = _cardsHostel[index];
+        CardData temp = _cardsHostel[index];
         int targetIndex = GetCardIndexInHostel(temp);
         _cardsHostel[index] = card;
         _cardsHostel[targetIndex] = temp;
     }
 
-    private int GetCardIndexInHostel(GameObject card)
+    private int GetCardIndexInHostel(CardData card)
     {
-        return _cardsHostel.IndexOf(card); 
+        return _cardsHostel.IndexOf(card);
     }
 
-    public GameObject GetRandomCardInBar()
+    public CardData GetRandomCardInBar()
     {
         return _cardsBar[Random.Range(0, _cardsBar.Count)];
     }
