@@ -95,6 +95,7 @@ public class GameManager : MonoBehaviour
             _cardsDeck.RemoveAt(rand);
 
             cardInfo.CardDataRef = cardData.CardDataRef;
+            cardInfo.Image.sprite = cardInfo.CardDataRef.Sprite;
             // cardInfo.GetComponent<CardMovement>()
             cardInfo.transform.position = _cardBarTargetPos[cardsInBar].position;
             cardInfo.gameObject.SetActive(true);
