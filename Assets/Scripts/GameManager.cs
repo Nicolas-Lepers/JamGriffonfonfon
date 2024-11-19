@@ -143,7 +143,7 @@ public class GameManager : MonoBehaviour
                     bestGroup = count;
                 continue;
             }
-            else if(_cardsInn[i].CardDataRef.Consumable == Consumable.FOOD && needFollow == true)
+            else if (_cardsInn[i].CardDataRef.Consumable == Consumable.FOOD && needFollow == true)
                 count++;
 
         }
@@ -226,7 +226,22 @@ public class GameManager : MonoBehaviour
     {
         _cardsBar.Add(card);
     }
+    public void CardLeaveInn(int cardIndex)
+    {
+        _cardsInn.RemoveAt(cardIndex);
+    }
+    private CardInfo GetRandomCardInDeck()
+    {
+        return _cardsDeck[Random.Range(0, _cardsDeck.Count)];
+    }
 
+    public void AddCardFromDeskInInn(int index)
+    {
+        var randomCard = GetRandomCardInDeck();
+
+        AddCardInInnAtIndex(randomCard, index);
+        _cardsDeck.Remove(randomCard);
+    }
     /// <summary>
     /// Remove one card in inn to put in the bar
     /// </summary>
@@ -246,9 +261,21 @@ public class GameManager : MonoBehaviour
         _cardsInn.Remove(card);
     }
 
-    public void GoblinLeaveInn()
+    public void MoveFirstDeckCardToDiscardPile()
     {
+        _discardPile.Add(_cardsDeck[0]);
+        _cardsDeck.Remove(_cardsDeck[0]);
+    }
 
+    public void MoveAllCardInDeck()
+    {
+        for (int i = 0; i < _cardsBar.Count; i++)
+        {
+            int rand = Random.Range(0, _cardsDeck.Count);
+            _cardsDeck.Insert(rand, _cardsBar[i]);
+            _cardsBar.RemoveAt(i);
+            i--;
+        }
     }
 
     public void CardLeaveInnWithNeihgbourUp(CardInfo card, int nbNeihgbourUp)
