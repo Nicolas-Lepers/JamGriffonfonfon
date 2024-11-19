@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -51,8 +52,9 @@ public class CardHolderInn : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             _cardsInn[i].MoveToPoint(targetPos, true);
             card.SetNewBasePos(targetPos);
         }
-        
-        GameManager.Instance.PhaseInn();
+
+        Debug.Log("inn card");
+        GameManager.Instance.PutCardInInn(card.GetComponent<CardInfo>());
     }
     
     private void OnDrawGizmos()

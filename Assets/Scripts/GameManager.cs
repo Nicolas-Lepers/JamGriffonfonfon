@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
     {
         OnWin += GameOver;
         OnLose += GameOver;
-        
+
         for (int i = 0; i < _cardsData.Count; i++)
         {
             GameObject go = Instantiate(_prefabCardVisual, _deckPos.transform.position, Quaternion.identity, _deckPos);
@@ -68,7 +68,6 @@ public class GameManager : MonoBehaviour
                 _cardsDeck.Add(card);
             }
         }
-
         StartCoroutine(PhaseBar());
     }
 
@@ -79,21 +78,26 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void CheckEndGame()
+    public bool CheckEndGame()
     {
         if (_discardPile.Count >= _numnerCardInDiscardPileToLose)
+        {
             OnLose?.Invoke();
-
+            return true;
+        }
         if (_cardsDeck.Count >= 0)
-            return;
+        {
+            OnWin?.Invoke();
+            return true;
+        }
 
         if (_cardsInn.Count < _numberCardInInnToWin)
         {
             OnLose?.Invoke();
-            return;
+            return true;
         }
-        
-        OnWin?.Invoke();
+
+        return false;
     }
 
     private void GameOver()
@@ -105,30 +109,37 @@ public class GameManager : MonoBehaviour
     {
         CanSelectedCard = true;
         Debug.Log("bar");
-        var wait = new WaitForSeconds(1);
+        var wait = new WaitForSeconds(.5f);
         yield return wait;
 
-        while (_cardsBar.Count < 4)
+
+        while (_cardsBar.Count < 4 || _barIndexNul != -1)
         {
             int cardsInBar = _cardsBar.Count;
-            CardInfo cardInfo = _cardsDeck[^1];
-            _cardsDeck.RemoveAt(_cardsDeck.Count - 1);
-
             int rand = Random.Range(0, _cardsDeck.Count - 1);
+            CardInfo cardInfo = _cardsDeck[rand];
+            //_cardsDeck.RemoveAt(_cardsDeck.Count - 1);
+
 
             //add to bar
-            cardInfo.CardDataRef = _cardsData[rand];
+            //cardInfo.CardDataRef = _cardsData[rand];
             cardInfo.CardMovement.CardVisual.CardImage.sprite = cardInfo.CardDataRef.Sprite;
             //CardInfo cardData = _cardsDeck[rand];
-            _cardsBar.Add(cardInfo);
+            if (_barIndexNul < 0)
+                _cardsBar.Add(cardInfo);
             //remove from deck
             _cardsDeck.RemoveAt(rand);
 
             // cardInfo.GetComponent<CardMovement>()
+            CardMovement move = cardInfo.CardMovement;
             if (_barIndexNul < 0)
-                cardInfo.transform.position = _cardBarTargetPos[cardsInBar].position;
+                move.MoveToPoint(_cardBarTargetPos[cardsInBar].position, false);
             else
-                cardInfo.transform.position = _cardBarTargetPos[_barIndexNul].position;
+            {
+                move.MoveToPoint(_cardBarTargetPos[_barIndexNul].position, false);
+                _cardsBar[_barIndexNul] = cardInfo;
+                _barIndexNul = -1;
+            }
 
             cardInfo.gameObject.SetActive(true);
             yield return wait;
@@ -137,6 +148,7 @@ public class GameManager : MonoBehaviour
 
         if (_cardsInn.Count <= 0)
             yield return null;
+
 
         if (GetNumberOfBattleInBar() >= 3)
         {
@@ -162,9 +174,10 @@ public class GameManager : MonoBehaviour
     }
     public IEnumerator PhaseInn()
     {
+        Debug.Log("inn");
         CanSelectedCard = false;
 
-        var wait = new WaitForSeconds(1);
+        var wait = new WaitForSeconds(.5f);
 
         for (int i = 0; i < _cardsInn.Count; i++)
         {
@@ -173,8 +186,11 @@ public class GameManager : MonoBehaviour
                 continue;
 
             _cardsInn[i].CardDataRef.IrritationEffect.ActivateEffect(i);
-            yield return wait;
+            break;
         }
+        yield return wait;
+
+        CheckEndGame();
 
         StartCoroutine(PhaseBar());
     }
