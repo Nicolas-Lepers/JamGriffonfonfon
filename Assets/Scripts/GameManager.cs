@@ -14,7 +14,7 @@ using Random = UnityEngine.Random;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-  
+
 
     [SerializeField] Transform _canvasRef;
 
@@ -117,7 +117,6 @@ public class GameManager : MonoBehaviour
     public int GetNumberOfGolbin()
     {
         int count = 0;
-
         for (int i = 0; i < _cardsInn.Count; i++)
         {
             if (_cardsInn[i].CardDataRef.IsGoblin)
@@ -126,27 +125,60 @@ public class GameManager : MonoBehaviour
         return count;
     }
 
-    public int GetNumberOfFood()
+    public int GetNumberOfFood(bool needFollow = false)
     {
         int count = 0;
-
+        int bestGroup = 0;
         for (int i = 0; i < _cardsInn.Count; i++)
         {
-            if (_cardsInn[i].CardDataRef.Consumable == Consumable.FOOD)
+            if (_cardsInn[i].CardDataRef.Consumable == Consumable.FOOD && needFollow == false)
+            {
                 count++;
+                continue;
+            }
+
+            if (_cardsInn[i].CardDataRef.Consumable != Consumable.FOOD && needFollow == true)
+            {
+                if (count > bestGroup)
+                    bestGroup = count;
+                continue;
+            }
+            else if(_cardsInn[i].CardDataRef.Consumable == Consumable.FOOD && needFollow == true)
+                count++;
+
         }
-        return count;
+
+        if (needFollow == true)
+            return bestGroup;
+        else
+            return count;
     }
-    public int GetNumberOfBeer()
+    public int GetNumberOfBeer(bool needFollow = default)
     {
         int count = 0;
-
+        int bestGroup = 0;
         for (int i = 0; i < _cardsInn.Count; i++)
         {
-            if (_cardsInn[i].CardDataRef.Consumable == Consumable.BEER)
+            if (_cardsInn[i].CardDataRef.Consumable == Consumable.BEER && needFollow == false)
+            {
+                count++;
+                continue;
+            }
+
+            if (_cardsInn[i].CardDataRef.Consumable != Consumable.BEER && needFollow == true)
+            {
+                if (count > bestGroup)
+                    bestGroup = count;
+                continue;
+            }
+            else if (_cardsInn[i].CardDataRef.Consumable == Consumable.BEER && needFollow == true)
                 count++;
         }
-        return count;
+
+        if (needFollow == true)
+            return bestGroup;
+        else
+            return count;
     }
 
     public void SetCurrentCard(GameObject card)
