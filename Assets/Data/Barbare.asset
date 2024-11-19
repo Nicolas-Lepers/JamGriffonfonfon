@@ -22,7 +22,7 @@ MonoBehaviour:
   <InnIrritationCondition>k__BackingField:
     rid: 4288743400620425247
   <IrritationEffect>k__BackingField:
-    rid: 5213559127556489218
+    rid: 5213559127556489224
   references:
     version: 2
     RefIds:
@@ -31,8 +31,8 @@ MonoBehaviour:
       data:
         <TargetConsumable>k__BackingField: 0
         <TargetAmount>k__BackingField: 0
-        <ComparerType>k__BackingField: 0
-    - rid: 5213559127556489218
-      type: {class: EffectQuitsOtherQuits, ns: , asm: Assembly-CSharp}
+        <ComparerType>k__BackingField: 2
+    - rid: 5213559127556489224
+      type: {class: EffectQuitAllNuisances, ns: , asm: Assembly-CSharp}
       data:
-        <OtherOffset>k__BackingField: 1
+        _nuisance: 0

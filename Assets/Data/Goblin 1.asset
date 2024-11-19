@@ -10,26 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d1d11cd1eb9a26e4a85312edb87d31b9, type: 3}
-  m_Name: Religieuse
+  m_Name: Goblin 1
   m_EditorClassIdentifier: 
   <Sprite>k__BackingField: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  <Name>k__BackingField: La Religieuse abstinente
+  <Name>k__BackingField: "Les tripl\xE9s Goblin"
   <Consumable>k__BackingField: 1
-  <Nuisance>k__BackingField: 2
-  <NuisancePower>k__BackingField: 1
-  <IsGoblin>k__BackingField: 0
-  <BarIrritationCondition>k__BackingField: 0
+  <Nuisance>k__BackingField: 0
+  <NuisancePower>k__BackingField: 2
+  <IsGoblin>k__BackingField: 1
+  <BarIrritationCondition>k__BackingField: 1
   <InnIrritationCondition>k__BackingField:
-    rid: 5213559127556489219
+    rid: 5213559127556489226
   <IrritationEffect>k__BackingField:
-    rid: 4288743401154412557
+    rid: 5213559127556489227
   references:
     version: 2
     RefIds:
-    - rid: 4288743401154412557
-      type: {class: EffectQuits, ns: , asm: Assembly-CSharp}
-      data: 
-    - rid: 5213559127556489219
-      type: {class: NextToConsumable, ns: , asm: Assembly-CSharp}
+    - rid: 5213559127556489226
+      type: {class: GoblinNComparer, ns: , asm: Assembly-CSharp}
       data:
-        <Consumable>k__BackingField: 0
+        <TargetGoblinsAmount>k__BackingField: 3
+        <ComparerType>k__BackingField: 2
+    - rid: 5213559127556489227
+      type: {class: EffectQuitAllGoblins, ns: , asm: Assembly-CSharp}
+      data: 

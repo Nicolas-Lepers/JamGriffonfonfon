@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
 
+    public bool CanSelectedCard = true;
     private void Start()
     {
         for (int i = 0; i < _cardsDeck.Count; i++)
@@ -74,8 +75,10 @@ public class GameManager : MonoBehaviour
         Debug.Log("Winer");
 
     }
+
     public void PhaseBar()
     {
+        CanSelectedCard = true;
         while (_cardsBar.Count < 4)
         {
             int cardsInBar = _cardsBar.Count;
@@ -105,7 +108,20 @@ public class GameManager : MonoBehaviour
             _cardsBar[i].CardDataRef.IrritationEffect.ActivateEffect(i);
         }
     }
+    public void PhaseInn()
+    {
+        CanSelectedCard = false;
+        for (int i = 0; i < _cardsInn.Count; i++)
+        {
+            //check consequance in Inn
+            if (_cardsInn[i].CardDataRef.InnIrritationCondition.IsIrritated(i) == false)
+                continue;
 
+            _cardsInn[i].CardDataRef.IrritationEffect.ActivateEffect(i);
+        }
+
+        PhaseBar();
+    }
     public int GetNumberOfGolbin()
     {
         int count = 0;
@@ -177,17 +193,7 @@ public class GameManager : MonoBehaviour
     {
         CurrentCardDragging = card;
     }
-    public void PhaseInn()
-    {
-        for (int i = 0; i < _cardsInn.Count; i++)
-        {
-            //check consequance in Inn
-            if (_cardsInn[i].CardDataRef.InnIrritationCondition.IsIrritated(i) == false)
-                continue;
-
-            _cardsInn[i].CardDataRef.IrritationEffect.ActivateEffect(i);
-        }
-    }
+   
     public void ShuffleInnCardsInRange(int min, int max)
     {
         var cardsToShuffle = new List<CardInfo>();
