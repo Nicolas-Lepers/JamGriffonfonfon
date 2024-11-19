@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardDragged : MonoBehaviour
+public class CardDraggedHandler : MonoBehaviour
 {
-    public static CardDragged Instance;
+    public static CardDraggedHandler Instance;
 
     private void Awake()
     {

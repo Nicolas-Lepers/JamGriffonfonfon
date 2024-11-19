@@ -3,34 +3,16 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
-
 
 public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, IPointerDownHandler
 {
-    private Canvas canvas;
-    [SerializeField] private Image imageComponent;
-    [SerializeField] private bool instantiateVisual = true;
-    // private VisualCardsHandler visualHandler;
-    private Vector3 offset;
+    [Header("Visual")]
+    [SerializeField] private CardVisual _cardVisualPrefab;
 
     [Header("Movement")]
     [SerializeField] private float moveSpeedLimit = 50;
-
-    [Header("Selection")]
-    public bool selected;
-    public float selectionOffset = 50;
-    private float pointerDownTime;
-    private float pointerUpTime;
-
-    [Header("Visual")]
-    [SerializeField] private CardVisual cardVisualPrefab;
-    // [HideInInspector] public CardVisual cardVisual;
-
-    [Header("States")]
-    public bool isHovering;
-    public bool isDragging;
-    [HideInInspector] public bool wasDragged;
 
     [Header("Events")]
     [HideInInspector] public UnityEvent<CardMovement> PointerEnterEvent;
@@ -41,28 +23,30 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     [HideInInspector] public UnityEvent<CardMovement> EndDragEvent;
     [HideInInspector] public UnityEvent<CardMovement, bool> SelectEvent;
 
-    private Transform _startParent;
+    public bool WasDragged { get; private set; }
+    public bool IsHovering { get; private set; }
+    public bool IsDragging { get; private set; }
+
+    private Canvas _canvas;
+    private Vector3 _offset;
+    private Image _imageComponent;
+    private CardVisual _currentCardVisual;
     
     void Start()
     {
-        _startParent = transform.parent;
-        canvas = GetComponentInParent<Canvas>();
+        _canvas = GetComponentInParent<Canvas>();
+        _imageComponent = GetComponent<Image>();
 
-        if (!instantiateVisual)
-            return;
-
-        cardVisualPrefab.Initialize(this, canvas);
-        // visualHandler = FindObjectOfType<VisualCardsHandler>();
-        // cardVisual = Instantiate(cardVisualPrefab, visualHandler ? visualHandler.transform : canvas.transform).GetComponent<CardVisual>();
-        // cardVisual.Initialize(this);
+        _currentCardVisual = Instantiate(_cardVisualPrefab, CardVisualHandler.Instance.transform);
+        _currentCardVisual.Initialize(this);
     }
     void Update()
     {
         ClampPosition();
 
-        if (isDragging)
+        if (IsDragging)
         {
-            Vector2 targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition) - offset;
+            Vector2 targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition) - _offset;
             Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
             Vector2 velocity = direction * Mathf.Min(moveSpeedLimit, Vector2.Distance(transform.position, targetPosition) / Time.deltaTime);
             transform.Translate(velocity * Time.deltaTime);
@@ -87,31 +71,28 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         BeginDragEvent.Invoke(this);
         // Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         // offset = mousePosition - (Vector2)transform.position;
-        isDragging = true;
-        canvas.GetComponent<GraphicRaycaster>().enabled = false;
+        IsDragging = true;
+        _canvas.GetComponent<GraphicRaycaster>().enabled = false;
 
-        imageComponent.raycastTarget = false;
+        _imageComponent.raycastTarget = false;
 
-        wasDragged = true;
-        
-        transform.SetParent(CardDragged.Instance.transform);
+        WasDragged = true;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         EndDragEvent.Invoke(this);
-        isDragging = false;
-        canvas.GetComponent<GraphicRaycaster>().enabled = true;
+        IsDragging = false;
+        _canvas.GetComponent<GraphicRaycaster>().enabled = true;
 
-        imageComponent.raycastTarget = true;
-        transform.SetParent(_startParent);
+        _imageComponent.raycastTarget = true;
 
         StartCoroutine(FrameWait());
 
         IEnumerator FrameWait()
         {
             yield return new WaitForEndOfFrame();
-            wasDragged = false;
+            WasDragged = false;
         }
         
     }
@@ -119,13 +100,13 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     public void OnPointerEnter(PointerEventData eventData)
     {
         PointerEnterEvent.Invoke(this);
-        isHovering = true;
+        IsHovering = true;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         PointerExitEvent.Invoke(this);
-        isHovering = false;
+        IsHovering = false;
     }
 
     public void OnPointerUp(PointerEventData eventData)
