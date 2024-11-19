@@ -12,7 +12,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     [SerializeField] private CardVisual _cardVisualPrefab;
 
     [Header("Movement")]
-    [SerializeField] private float moveSpeedLimit = 50;
+    [SerializeField] private float _moveSpeedLimit = 50;
 
     [Header("Events")]
     [HideInInspector] public UnityEvent<CardMovement> PointerEnterEvent;
@@ -54,7 +54,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         {
             Vector2 targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
-            Vector2 velocity = direction * Mathf.Min(moveSpeedLimit, Vector2.Distance(transform.position, targetPosition) / Time.deltaTime);
+            Vector2 velocity = direction * Mathf.Min(_moveSpeedLimit, Vector2.Distance(transform.position, targetPosition) / Time.deltaTime);
             
             transform.Translate(velocity * Time.deltaTime);
         }
@@ -78,7 +78,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     {
         BeginDragEvent.Invoke(this);
 
-        _canvas.GetComponent<GraphicRaycaster>().enabled = false;
+        // _canvas.GetComponent<GraphicRaycaster>().enabled = false;
         _imageComponent.raycastTarget = false;
 
         IsDragging = true;

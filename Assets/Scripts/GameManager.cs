@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] List<CardInfo> _cardsDeck = new List<CardInfo>();
     [SerializeField] List<CardInfo> _discardPile = new List<CardInfo>();
 
-    public CardMovement CurrentCard = null;
+    public GameObject CurrentCard = null;
     public List<CardInfo> CardsInn => _cardsInn;
     public List<CardInfo> CardsBar => _cardsBar;
     public List<CardInfo> CardsDeck => _cardsDeck;
@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour
         while (_cardsBar.Count < 4)
         {
             int cardsInBar = _cardsBar.Count;
-            CardInfo cardInfo = _cardsQueue[_cardsQueue.Count - 1];
+            CardInfo cardInfo = _cardsQueue[^1];
             _cardsQueue.RemoveAt(_cardsQueue.Count - 1);
 
             int rand = Random.Range(0, _cardsDeck.Count - 1);
@@ -108,6 +108,7 @@ public class GameManager : MonoBehaviour
             _cardsDeck.RemoveAt(rand);
 
             cardInfo.CardDataRef = cardData.CardDataRef;
+            // cardInfo.GetComponent<CardMovement>()
             cardInfo.transform.position = _cardBarTargetPos[cardsInBar].position;
             cardInfo.gameObject.SetActive(true);
         }
