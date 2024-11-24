@@ -1,11 +1,13 @@
 using System;
+using System.Collections;
 
 
 [Serializable]
 public class EffectBarToDeck : IIrrationEffect
 {
-    public void ActivateEffect(int cardIndex)
+    public IEnumerator ActivateEffect(int cardIndex)
     {
         GameManager.Instance.MoveAllCardInDeck();
+        yield return null;
     }
 }

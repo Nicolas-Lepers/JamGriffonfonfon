@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,9 +21,11 @@ public class EffectPositionSwap : IIrrationEffect
 
     [SerializeField] private TargetPosition _positionType;
 
-    public void ActivateEffect(int cardIndex)
+    public IEnumerator ActivateEffect(int cardIndex)
     {
         var otherIndex = _cardIndexGetter[_positionType](GameManager.Instance.CardsInn.Count);
         GameManager.Instance.SwitchCard(GameManager.Instance.CardsInn[cardIndex], otherIndex);
+        yield return new WaitForSeconds(0.5f);
+        GameManager.Instance.CardLeaveInn(0);
     }
 }

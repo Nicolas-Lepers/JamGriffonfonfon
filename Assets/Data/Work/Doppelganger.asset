@@ -10,29 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d1d11cd1eb9a26e4a85312edb87d31b9, type: 3}
-  m_Name: SatyreAngoisse
+  m_Name: Doppelganger
   m_EditorClassIdentifier: 
-  <Sprite>k__BackingField: {fileID: 21300000, guid: cb8f617c21987314e982eb6a17da714a, type: 3}
-  <Name>k__BackingField: "Le Satyre angoiss\xE9"
+  <Sprite>k__BackingField: {fileID: 21300000, guid: 36b08f37ac5b97c4695ad75d1b96c004, type: 3}
+  <Name>k__BackingField: "Le Doppelg\xE4nger"
   <Consumable>k__BackingField: 1
-  <Nuisance>k__BackingField: 1
+  <Nuisance>k__BackingField: 0
   <NuisancePower>k__BackingField: 1
   <IsGoblin>k__BackingField: 0
   <BarIrritationCondition>k__BackingField: 3
   <InnIrritationCondition>k__BackingField:
-    rid: 4288743401154412579
+    rid: 5213559127556489221
   <IrritationEffect>k__BackingField:
-    rid: 4288743401154412580
+    rid: 5213559127556489222
   references:
     version: 2
     RefIds:
-    - rid: 4288743401154412579
+    - rid: 5213559127556489221
       type: {class: ConsumableNComparer, ns: , asm: Assembly-CSharp}
       data:
-        <TargetConsumable>k__BackingField: 0
-        <TargetAmount>k__BackingField: 0
-        <ComparerType>k__BackingField: 2
-    - rid: 4288743401154412580
-      type: {class: EffectPositionSwap, ns: , asm: Assembly-CSharp}
+        <TargetConsumable>k__BackingField: 1
+        <TargetAmount>k__BackingField: 4
+        <ComparerType>k__BackingField: 1
+    - rid: 5213559127556489222
+      type: {class: EffectQuitsAndNewComes, ns: , asm: Assembly-CSharp}
       data:
-        _positionType: 0
+        <Position>k__BackingField: 0

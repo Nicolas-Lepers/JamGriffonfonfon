@@ -10,29 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d1d11cd1eb9a26e4a85312edb87d31b9, type: 3}
-  m_Name: Doppelganger
+  m_Name: Test
   m_EditorClassIdentifier: 
-  <Sprite>k__BackingField: {fileID: 21300000, guid: 36b08f37ac5b97c4695ad75d1b96c004, type: 3}
-  <Name>k__BackingField: "Le Doppelg\xE4nger"
+  <Sprite>k__BackingField: {fileID: 21300000, guid: c63d3f874b3898d44b0941a7f9beadf8, type: 3}
+  <Name>k__BackingField: Le Barbare sanguinaire
   <Consumable>k__BackingField: 1
   <Nuisance>k__BackingField: 0
   <NuisancePower>k__BackingField: 1
   <IsGoblin>k__BackingField: 0
-  <BarIrritationCondition>k__BackingField: 3
+  <BarIrritationCondition>k__BackingField: 1
   <InnIrritationCondition>k__BackingField:
-    rid: 5213559127556489221
+    rid: 4288743400620425247
   <IrritationEffect>k__BackingField:
-    rid: 5213559127556489222
+    rid: 8816559820501155847
   references:
     version: 2
     RefIds:
-    - rid: 5213559127556489221
+    - rid: 4288743400620425247
       type: {class: ConsumableNComparer, ns: , asm: Assembly-CSharp}
       data:
-        <TargetConsumable>k__BackingField: 1
-        <TargetAmount>k__BackingField: 4
-        <ComparerType>k__BackingField: 0
-    - rid: 5213559127556489222
-      type: {class: EffectQuitsAndNewComes, ns: , asm: Assembly-CSharp}
-      data:
-        <Position>k__BackingField: 0
+        <TargetConsumable>k__BackingField: 0
+        <TargetAmount>k__BackingField: 0
+        <ComparerType>k__BackingField: 2
+    - rid: 8816559820501155847
+      type: {class: EffectTest, ns: , asm: Assembly-CSharp}
+      data: 

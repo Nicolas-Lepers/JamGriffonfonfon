@@ -13,10 +13,10 @@ public class CardHolderInn : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     [SerializeField] private Transform _parentCardInn;
     public bool IsEnteredInn { get; private set; }
-    
+
     private List<Vector3> _cardInnTargetPos = new List<Vector3>();
     private List<CardMovement> _cardsInn = new List<CardMovement>();
-    
+
     [SerializeField] private float _offsetPosYCardInn = 3f;
     [SerializeField] private float _topYLimit;
 
@@ -36,27 +36,52 @@ public class CardHolderInn : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void ReleaseCardOnIt(CardMovement card)
     {
-        _cardsInn.Add(card);
+        GameManager.Instance.AddCardInInn(card.GetComponent<CardInfo>());
+
+        int cardCount = GameManager.Instance.CardsInn.Count;
         card.transform.SetSiblingIndex(0);
         card.CardVisual.transform.SetSiblingIndex(0);
 
-        float totalHeight = _offsetPosYCardInn * _cardsInn.Count;
+        float totalHeight = _offsetPosYCardInn * cardCount;
         if (totalHeight > _topYLimit)
         {
-            _offsetPosYCardInn = _topYLimit / _cardsInn.Count;
+            _offsetPosYCardInn = _topYLimit / cardCount;
         }
 
-        for (int i = 0; i < _cardsInn.Count; i++)
+        for (int i = 0; i < cardCount; i++)
         {
+            CardMovement cardMovement = GameManager.Instance.CardsInn[i].GetComponent<CardMovement>();
             Vector3 targetPos = _parentCardInn.position + new Vector3(0, _offsetPosYCardInn * i, 0);
-            _cardsInn[i].MoveToPoint(targetPos, true);
+            cardMovement.MoveToPoint(targetPos, true);
             card.SetNewBasePos(targetPos);
         }
 
         Debug.Log("inn card");
         GameManager.Instance.PutCardInInn(card.GetComponent<CardInfo>());
     }
-    
+
+    public void ReplaceCardInOrder(CardMovement card)
+    {
+
+        int cardCount = GameManager.Instance.CardsInn.Count;
+        card.transform.SetSiblingIndex(0);
+        card.CardVisual.transform.SetSiblingIndex(0);
+
+        float totalHeight = _offsetPosYCardInn * cardCount;
+        if (totalHeight > _topYLimit)
+        {
+            _offsetPosYCardInn = _topYLimit / cardCount;
+        }
+
+        for (int i = 0; i < cardCount; i++)
+        {
+            CardMovement cardMovement = GameManager.Instance.CardsInn[i].GetComponent<CardMovement>();
+            Vector3 targetPos = _parentCardInn.position + new Vector3(0, _offsetPosYCardInn * i, 0);
+            cardMovement.MoveToPoint(targetPos, true);
+            card.SetNewBasePos(targetPos);
+        }
+    }
+
     private void OnDrawGizmos()
     {
         if (_parentCardInn == null) return;

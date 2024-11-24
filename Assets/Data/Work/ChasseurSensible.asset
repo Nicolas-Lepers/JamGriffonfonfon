@@ -10,28 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d1d11cd1eb9a26e4a85312edb87d31b9, type: 3}
-  m_Name: SorcierFaineant
+  m_Name: ChasseurSensible
   m_EditorClassIdentifier: 
-  <Sprite>k__BackingField: {fileID: 21300000, guid: df64c376a6c9ad545b7493ceabf1303a, type: 3}
-  <Name>k__BackingField: "Le Sorcier fain\xE9ant"
+  <Sprite>k__BackingField: {fileID: 21300000, guid: 62704650efa4f1c4e9be52a4d53bec51, type: 3}
+  <Name>k__BackingField: Le Chasseur sensible
   <Consumable>k__BackingField: 0
-  <Nuisance>k__BackingField: 1
+  <Nuisance>k__BackingField: 2
   <NuisancePower>k__BackingField: 1
   <IsGoblin>k__BackingField: 0
   <BarIrritationCondition>k__BackingField: 0
   <InnIrritationCondition>k__BackingField:
-    rid: 4288743401154412571
+    rid: 4288743401154412569
   <IrritationEffect>k__BackingField:
-    rid: 4288743401154412572
+    rid: 4288743401154412570
   references:
     version: 2
     RefIds:
-    - rid: 4288743401154412571
-      type: {class: FloorNComparer, ns: , asm: Assembly-CSharp}
+    - rid: 4288743401154412569
+      type: {class: ConsumableComparer, ns: , asm: Assembly-CSharp}
       data:
-        <TargetFloor>k__BackingField: 5
-        <ComparerType>k__BackingField: 1
-    - rid: 4288743401154412572
-      type: {class: EffectPositionSwap, ns: , asm: Assembly-CSharp}
+        <FoodType>k__BackingField: 1
+    - rid: 4288743401154412570
+      type: {class: EffectQuitAllNuisances, ns: , asm: Assembly-CSharp}
       data:
-        _positionType: 0
+        _nuisance: 1

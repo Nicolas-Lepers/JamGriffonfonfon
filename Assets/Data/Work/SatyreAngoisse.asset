@@ -10,28 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d1d11cd1eb9a26e4a85312edb87d31b9, type: 3}
-  m_Name: NainSaoul
+  m_Name: SatyreAngoisse
   m_EditorClassIdentifier: 
-  <Sprite>k__BackingField: {fileID: 21300000, guid: 549811b0edcc1344394121dfb2c155d6, type: 3}
-  <Name>k__BackingField: Le Nain saoul
-  <Consumable>k__BackingField: 0
-  <Nuisance>k__BackingField: 0
+  <Sprite>k__BackingField: {fileID: 21300000, guid: cb8f617c21987314e982eb6a17da714a, type: 3}
+  <Name>k__BackingField: "Le Satyre angoiss\xE9"
+  <Consumable>k__BackingField: 1
+  <Nuisance>k__BackingField: 1
   <NuisancePower>k__BackingField: 1
   <IsGoblin>k__BackingField: 0
   <BarIrritationCondition>k__BackingField: 3
   <InnIrritationCondition>k__BackingField:
-    rid: 4288743401154412564
+    rid: 4288743401154412579
   <IrritationEffect>k__BackingField:
-    rid: 4288743401154412565
+    rid: 8816559820501155844
   references:
     version: 2
     RefIds:
-    - rid: 4288743401154412564
+    - rid: 4288743401154412579
       type: {class: ConsumableNComparer, ns: , asm: Assembly-CSharp}
       data:
         <TargetConsumable>k__BackingField: 0
-        <TargetAmount>k__BackingField: 4
-        <ComparerType>k__BackingField: 0
-    - rid: 4288743401154412565
-      type: {class: EffectQuitsFirstFromDeckQuits, ns: , asm: Assembly-CSharp}
+        <TargetAmount>k__BackingField: 0
+        <ComparerType>k__BackingField: 2
+    - rid: 8816559820501155844
+      type: {class: EffectReplaceCardToBar, ns: , asm: Assembly-CSharp}
       data: 

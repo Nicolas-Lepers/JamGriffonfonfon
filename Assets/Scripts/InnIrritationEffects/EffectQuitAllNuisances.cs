@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 
@@ -7,9 +8,12 @@ public class EffectQuitAllNuisances : IIrrationEffect
 {
     [SerializeField] private NuisanceType _nuisance;
     
-    public void ActivateEffect(int cardIndex)
+    public IEnumerator ActivateEffect(int cardIndex)
     {
         GameManager.Instance.CardLeaveInn(cardIndex);
-        GameManager.Instance.CheckNuisance(_nuisance);
+        
+        yield return new WaitForSeconds(0.2f);
+
+        yield return GameManager.Instance.CheckNuisance(_nuisance);
     }
 }

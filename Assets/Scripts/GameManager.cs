@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] Transform _discardPilePos;
     [SerializeField] Transform _deckPos;
+    public Transform DiscardPilePos => _discardPilePos;
+    public Transform DeckPos => _deckPos;
 
     [SerializeField] List<Transform> _cardBarTargetPos = new List<Transform>();
     [SerializeField] Transform _cardInnTargetDefaultPos;
@@ -85,19 +87,20 @@ public class GameManager : MonoBehaviour
             OnLose?.Invoke();
             return true;
         }
-        if (_cardsDeck.Count >= 0)
+
+        if (_cardsDeck.Count > 0)
+            return false;
+
+        if (_cardsInn.Count >= _numberCardInInnToWin)
         {
             OnWin?.Invoke();
             return true;
         }
-
-        if (_cardsInn.Count < _numberCardInInnToWin)
+        else
         {
             OnLose?.Invoke();
             return true;
         }
-
-        return false;
     }
 
     private void GameOver()
@@ -107,7 +110,6 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator PhaseBar()
     {
-        CanSelectedCard = true;
         Debug.Log("bar");
         var wait = new WaitForSeconds(.5f);
         yield return wait;
@@ -118,19 +120,14 @@ public class GameManager : MonoBehaviour
             int cardsInBar = _cardsBar.Count;
             int rand = Random.Range(0, _cardsDeck.Count - 1);
             CardInfo cardInfo = _cardsDeck[rand];
-            //_cardsDeck.RemoveAt(_cardsDeck.Count - 1);
 
-
-            //add to bar
-            //cardInfo.CardDataRef = _cardsData[rand];
             cardInfo.CardMovement.CardVisual.CardImage.sprite = cardInfo.CardDataRef.Sprite;
-            //CardInfo cardData = _cardsDeck[rand];
+
             if (_barIndexNul < 0)
                 _cardsBar.Add(cardInfo);
             //remove from deck
             _cardsDeck.RemoveAt(rand);
 
-            // cardInfo.GetComponent<CardMovement>()
             CardMovement move = cardInfo.CardMovement;
             if (_barIndexNul < 0)
                 move.MoveToPoint(_cardBarTargetPos[cardsInBar].position, false);
@@ -146,8 +143,6 @@ public class GameManager : MonoBehaviour
         }
 
 
-        if (_cardsInn.Count <= 0)
-            yield return null;
 
 
         if (GetNumberOfBattleInBar() >= 3)
@@ -162,6 +157,8 @@ public class GameManager : MonoBehaviour
         {
 
         }
+
+        CanSelectedCard = true;
 
         //for (int i = 0; i < _cardsBar.Count; i++)
         //{
@@ -179,33 +176,48 @@ public class GameManager : MonoBehaviour
 
         var wait = new WaitForSeconds(.5f);
 
-        for (int i = 0; i < _cardsInn.Count; i++)
+        yield return wait;
+
+        CheckConditionInInn();
+
+
+        if (CheckEndGame() == false)
         {
-            //check consequance in Inn
+            StartCoroutine(PhaseBar());
+        }
+    }
+    public void CheckConditionInInn()
+    {
+        for (int i = _cardsInn.Count - 1; i >= 0; i--)
+        {
+            if (i > _cardsInn.Count - 1)
+            {
+                CheckConditionInInn();
+                break;
+            }
+
             if (_cardsInn[i].CardDataRef.InnIrritationCondition.IsIrritated(i) == false)
                 continue;
 
-            _cardsInn[i].CardDataRef.IrritationEffect.ActivateEffect(i);
-            break;
+            StartCoroutine(_cardsInn[i].CardDataRef.IrritationEffect.ActivateEffect(i));
+            //return;
         }
-        yield return wait;
-
-        CheckEndGame();
-
-        StartCoroutine(PhaseBar());
     }
-
     int _barIndexNul = -1;
     public void PutCardInInn(CardInfo cardInfo)
     {
-        _cardsInn.Add(cardInfo);
+        //_cardsInn.Add(cardInfo);
         int value = GetCardIndexInBar(cardInfo);
         _cardsBar[value] = null;
         _barIndexNul = value;
-        //_cardsBar.Remove(cardInfo);
         StartCoroutine(PhaseInn());
     }
 
+    public void MoveCardToPoint(CardInfo cardInfo, Vector3 position, bool canInteractWithCard = false)
+    {
+        CardMovement move = cardInfo.CardMovement;
+        move.MoveToPoint(position, canInteractWithCard);
+    }
     public int GetNumberOfGolbin()
     {
         int count = 0;
@@ -242,7 +254,7 @@ public class GameManager : MonoBehaviour
 
 
         if (needFollow == true)
-            return bestGroup;
+            return count > bestGroup ? count : bestGroup;
         else
             return count;
     }
@@ -269,7 +281,7 @@ public class GameManager : MonoBehaviour
         }
 
         if (needFollow == true)
-            return bestGroup;
+            return count > bestGroup ? count : bestGroup;
         else
             return count;
     }
@@ -317,7 +329,7 @@ public class GameManager : MonoBehaviour
         var cardsToShuffle = new List<CardInfo>();
         for (int i = min; i <= max; i++)
         {
-            if (i < 0 || i > _cardsInn.Count) continue;
+            if (i < 0 || i > _cardsInn.Count - 1) continue;
             cardsToShuffle.Add(_cardsInn[i]);
         }
 
@@ -325,8 +337,8 @@ public class GameManager : MonoBehaviour
 
         for (int i = min; i <= max; i++)
         {
-            if (i < 0 || i > _cardsInn.Count) continue;
-            _cardsInn[i] = cardsToShuffle[i];
+            if (i < 0 || i > _cardsInn.Count - 1) continue;
+            _cardsInn[i] = cardsToShuffle[min < 0 ? i : (i - min)];
         }
     }
     public void AddCardInInn(CardInfo card)
@@ -342,22 +354,47 @@ public class GameManager : MonoBehaviour
     {
         _cardsBar.Add(card);
     }
-    public void CardLeaveInn(int cardIndex)
+    public void CardLeaveInn(int cardIndex, bool replace = true)
     {
+        MoveCardToPoint(_cardsInn[cardIndex], _discardPilePos.position, true);
         _cardsInn.RemoveAt(cardIndex);
+        if (_cardsInn.Count > 0 && replace == true)
+            CardHolderInn.Instance.ReplaceCardInOrder(_cardsInn[_cardsInn.Count - 1].CardMovement);
     }
+
+    public void CardGoDeck(int cardIndex, bool replace = true)
+    {
+        MoveCardToPoint(_cardsInn[cardIndex], _deckPos.position, true);
+        _cardsInn[cardIndex].CardMovement.CardVisual.CardImage.sprite = null;
+
+        int rand = Random.Range(0, _cardsDeck.Count - 1);
+        _cardsDeck.Insert(rand, _cardsInn[cardIndex]);
+
+        _cardsInn.RemoveAt(cardIndex);
+        if (_cardsInn.Count > 0 && replace == true)
+            CardHolderInn.Instance.ReplaceCardInOrder(_cardsInn[_cardsInn.Count - 1].CardMovement);
+    }
+
     private CardInfo GetRandomCardInDeck()
     {
         return _cardsDeck[Random.Range(0, _cardsDeck.Count)];
     }
 
-    public void AddCardFromDeskInInn(int index)
+    public void AddCardFromDeskToInn(int index, Vector2 pos)
     {
-        var randomCard = GetRandomCardInDeck();
+        if(_cardsDeck.Count <= 0)
+            return;
+
+        CardInfo randomCard = GetRandomCardInDeck();
+
+        randomCard.CardMovement.CardVisual.CardImage.sprite = randomCard.CardDataRef.Sprite;
+
+        MoveCardToPoint(randomCard, pos, true);
 
         AddCardInInnAtIndex(randomCard, index);
         _cardsDeck.Remove(randomCard);
     }
+
     /// <summary>
     /// Remove one card in inn to put in the bar
     /// </summary>
@@ -366,32 +403,62 @@ public class GameManager : MonoBehaviour
         if (_cardsInn.Contains(card) == false)
             return;
 
+        MoveCardToPoint(card, _cardBarTargetPos[_barIndexNul].position, false);
+
         _cardsInn.Remove(card);
-        _cardsBar.Add(card);
+        _cardsBar[_barIndexNul] = card;
+        _barIndexNul = -1;
     }
 
     public void CardLeaveInn(CardInfo card)
     {
         if (_cardsInn.Contains(card) == false) return;
-
+        MoveCardToPoint(card, _discardPilePos.position, true);
         _cardsInn.Remove(card);
+        _discardPile.Add(card);
+
+        if (_cardsInn.Count > 0)
+            CardHolderInn.Instance.ReplaceCardInOrder(_cardsInn[_cardsInn.Count - 1].CardMovement);
+
+    }
+
+    public void AddCardToDiscardPile(CardInfo card)
+    {
+        _discardPile.Add(card);
     }
 
     public void MoveFirstDeckCardToDiscardPile()
     {
-        _discardPile.Add(_cardsDeck[0]);
-        _cardsDeck.Remove(_cardsDeck[0]);
+        if (_cardsDeck.Count <= 0)
+            return;
+
+        CardInfo cardInfo = _cardsDeck[0];
+
+        cardInfo.CardMovement.CardVisual.CardImage.sprite = cardInfo.CardDataRef.Sprite;
+
+        _discardPile.Add(cardInfo);
+
+        MoveCardToPoint(cardInfo, _discardPilePos.position, true);
+
+        _cardsDeck.Remove(cardInfo);
     }
 
     public void MoveAllCardInDeck()
     {
         for (int i = 0; i < _cardsBar.Count; i++)
         {
+            if (_cardsBar[i] == null)
+                continue;
+
+
             int rand = Random.Range(0, _cardsDeck.Count);
             _cardsDeck.Insert(rand, _cardsBar[i]);
+            MoveCardToPoint(_cardsBar[i], _deckPos.position, true);
             _cardsBar.RemoveAt(i);
             i--;
         }
+        _cardsBar.Clear();
+        _barIndexNul = -1;
     }
 
     public void CardLeaveInnWithNeihgbourUp(CardInfo card, int nbNeihgbourUp)
@@ -412,15 +479,20 @@ public class GameManager : MonoBehaviour
         _cardsInn.Remove(card);
     }
 
-    public void CheckNuisance(NuisanceType nuisanceToCheck)
+    public IEnumerator CheckNuisance(NuisanceType nuisanceToCheck)
     {
         for (int i = _cardsInn.Count - 1; i >= 0; i--)
         {
-            CardData cardData = _cardsInn[i].CardDataRef;
+            CardInfo currentCard = _cardsInn[i];
+            CardData cardData = currentCard.CardDataRef;
             if ((int)nuisanceToCheck != (int)cardData.BarIrritationCondition)
                 continue;
 
-            cardData.IrritationEffect.ActivateEffect(i);
+            CardLeaveInn(currentCard);
+
+            StartCoroutine(cardData.IrritationEffect.ActivateEffect(i));
+
+            yield return new WaitForSeconds(0.2f);
         }
     }
 
@@ -433,9 +505,18 @@ public class GameManager : MonoBehaviour
     public void SwitchCard(CardInfo card, int index)
     {
         CardInfo temp = _cardsInn[index];
-        int targetIndex = GetCardIndexInInn(temp);
+
+        //MoveCardToPoint(_cardsInn[index], card.transform.position, true);
+
+        //MoveCardToPoint(card, temp.transform.position, false);
+
+        int targetIndex = GetCardIndexInInn(card);
         _cardsInn[index] = card;
         _cardsInn[targetIndex] = temp;
+
+        if (_cardsInn.Count > 0)
+            CardHolderInn.Instance.ReplaceCardInOrder(temp.CardMovement);
+
     }
 
     private int GetCardIndexInInn(CardInfo card)

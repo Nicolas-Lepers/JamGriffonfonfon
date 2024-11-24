@@ -20,13 +20,13 @@ public class WinLoseManager : MonoBehaviour
     private void Start()
     {
         GameManager.Instance.OnWin += Win;
-        GameManager.Instance.OnWin += Lose;
+        GameManager.Instance.OnLose += Lose;
     }
     
     private void OnDisable()
     {
         GameManager.Instance.OnWin -= Win;
-        GameManager.Instance.OnWin -= Lose;
+        GameManager.Instance.OnLose -= Lose;
     }
 
     [ContextMenu("Win")]

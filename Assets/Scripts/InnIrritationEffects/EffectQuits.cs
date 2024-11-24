@@ -1,10 +1,12 @@
 using System;
+using System.Collections;
 
 [Serializable]
 public class EffectQuits : IIrrationEffect
 {
-    public void ActivateEffect(int cardIndex)
+    public IEnumerator ActivateEffect(int cardIndex)
     {
          GameManager.Instance.CardLeaveInn(cardIndex);
+        yield return null;
     }
 }
