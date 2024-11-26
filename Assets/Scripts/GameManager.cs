@@ -69,6 +69,7 @@ public class GameManager : MonoBehaviour
             if (go.TryGetComponent(out CardInfo card) != false)
             {
                 card.CardDataRef = _cardsData[i];
+
                 _cardsDeck.Add(card);
             }
         }
@@ -138,6 +139,8 @@ public class GameManager : MonoBehaviour
             _cardsDeck.RemoveAt(rand);
 
             CardMovement move = cardInfo.CardMovement;
+            move.SetSiblingIndex(50,50);
+            
             if (_barIndexNul < 0)
                 move.MoveToPoint(_cardBarTargetPos[cardsInBar].position, false);
             else
@@ -376,8 +379,8 @@ public class GameManager : MonoBehaviour
         if (_cardsInn.Contains(card) == false) return;
 
         MoveCardToPoint(card, _discardPilePos.position, true);
-        _cardsInn.RemoveAt(cardIndex);
         _cardsInn[cardIndex].CardMovement.SetSiblingIndex(90, 90);
+        _cardsInn.RemoveAt(cardIndex);
         if (_cardsInn.Count > 0 && replace == true)
             CardHolderInn.Instance.ReplaceCardInOrder(_cardsInn[_cardsInn.Count - 1].CardMovement);
     }
@@ -385,9 +388,9 @@ public class GameManager : MonoBehaviour
     {
         if (_cardsInn.Contains(card) == false) return;
         MoveCardToPoint(card, _discardPilePos.position, true);
+        card.CardMovement.SetSiblingIndex(90, 90);
         _cardsInn.Remove(card);
         _discardPile.Add(card);
-        card.CardMovement.SetSiblingIndex(90, 90);
         if (_cardsInn.Count > 0)
             CardHolderInn.Instance.ReplaceCardInOrder(_cardsInn[_cardsInn.Count - 1].CardMovement);
 
@@ -419,6 +422,7 @@ public class GameManager : MonoBehaviour
 
         randomCard.CardMovement.CardVisual.CardImage.sprite = randomCard.CardDataRef.Sprite;
 
+        randomCard.CardMovement.SetSiblingIndex(50,50);
         MoveCardToPoint(randomCard, pos, true);
 
         AddCardInInnAtIndex(randomCard, index);
@@ -570,8 +574,6 @@ public class GameManager : MonoBehaviour
     {
         return _cardsBar[Random.Range(0, _cardsBar.Count)];
     }
-
-
 
     public void SetPositionInInnForAllCard()
     {

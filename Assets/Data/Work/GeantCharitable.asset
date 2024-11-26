@@ -22,16 +22,16 @@ MonoBehaviour:
   <InnIrritationCondition>k__BackingField:
     rid: 4288743401154412582
   <IrritationEffect>k__BackingField:
-    rid: 5213559281078763520
-  <RestartCheckCondition>k__BackingField: 1
+    rid: 4288743401154412580
   references:
     version: 2
     RefIds:
+    - rid: 4288743401154412580
+      type: {class: EffectPositionSwap, ns: , asm: Assembly-CSharp}
+      data:
+        _positionType: 1
     - rid: 4288743401154412582
       type: {class: ConsecutiveConsumable, ns: , asm: Assembly-CSharp}
       data:
         _minConsecutiveConsumable: 3
-        _targetConsumable: 1
-    - rid: 5213559281078763520
-      type: {class: EffectLeaveAndPaidForOther, ns: , asm: Assembly-CSharp}
-      data: 
+        _targetConsumable: 2

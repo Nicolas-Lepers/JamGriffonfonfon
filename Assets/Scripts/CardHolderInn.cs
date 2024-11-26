@@ -27,7 +27,7 @@ public class CardHolderInn : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         IsEnteredInn = true;
         
-        if(GameManager.Instance.CurrentCardDragging != null)
+        if(GameManager.Instance.CurrentCardDragging != null && GameManager.Instance.CurrentCardDragging.GetComponent<CardMovement>().IsDragging)
             OnPointerEnterAnim();
     }
 
@@ -35,13 +35,14 @@ public class CardHolderInn : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         IsEnteredInn = false;
         
-        _innHighlightImage.DOKill();
-        _innHighlightImage.DOFade(0, 0.25f);
+        ResetHighlightAnim();
     }
 
     public void ReleaseCardOnIt(CardMovement card)
     {
         GameManager.Instance.AddCardInInn(card.GetComponent<CardInfo>());
+
+        ResetHighlightAnim();
 
         int cardCount = GameManager.Instance.CardsInn.Count;
         card.SetSiblingIndex(0,0);
@@ -86,6 +87,12 @@ public class CardHolderInn : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private void OnPointerEnterAnim()
     {
         _innHighlightImage.DOFade(1, 0.5f).SetLoops(-1, LoopType.Yoyo);
+    }
+    
+    private void ResetHighlightAnim()
+    {
+        _innHighlightImage.DOKill();
+        _innHighlightImage.DOFade(0, 0.25f);
     }
     private void OnDrawGizmos()
     {
