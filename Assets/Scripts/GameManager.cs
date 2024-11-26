@@ -113,7 +113,6 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator PhaseBar()
     {
-        Debug.Log("bar");
         var wait = new WaitForSeconds(.5f);
         yield return wait;
 
@@ -130,7 +129,6 @@ public class GameManager : MonoBehaviour
             CardInfo cardInfo = _cardsDeck[rand];
 
             cardInfo.CardMovement.CardVisual.CardImage.sprite = cardInfo.CardDataRef.Sprite;
-            Debug.Log(_barIndexNul);
 
 
             if (_barIndexNul < 0)
@@ -139,8 +137,8 @@ public class GameManager : MonoBehaviour
             _cardsDeck.RemoveAt(rand);
 
             CardMovement move = cardInfo.CardMovement;
-            move.SetSiblingIndex(50,50);
-            
+            move.SetSiblingIndex(50, 50);
+
             if (_barIndexNul < 0)
                 move.MoveToPoint(_cardBarTargetPos[cardsInBar].position, false);
             else
@@ -172,7 +170,6 @@ public class GameManager : MonoBehaviour
     }
     public IEnumerator PhaseInn()
     {
-        Debug.Log("inn");
         CanSelectedCard = false;
 
         var wait = new WaitForSeconds(.5f);
@@ -422,7 +419,7 @@ public class GameManager : MonoBehaviour
 
         randomCard.CardMovement.CardVisual.CardImage.sprite = randomCard.CardDataRef.Sprite;
 
-        randomCard.CardMovement.SetSiblingIndex(50,50);
+        randomCard.CardMovement.SetSiblingIndex(50, 50);
         MoveCardToPoint(randomCard, pos, true);
 
         AddCardInInnAtIndex(randomCard, index);
@@ -508,6 +505,9 @@ public class GameManager : MonoBehaviour
     {
         for (int i = _cardsInn.Count - 1; i >= 0; i--)
         {
+            if (i >= _cardsInn.Count) 
+                i = _cardsInn.Count - 1;
+
             CardInfo currentCard = _cardsInn[i];
             CardData cardData = currentCard.CardDataRef;
             if ((int)nuisanceToCheck != (int)cardData.BarIrritationCondition)

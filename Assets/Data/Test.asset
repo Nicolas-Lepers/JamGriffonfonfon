@@ -18,11 +18,12 @@ MonoBehaviour:
   <Nuisance>k__BackingField: 0
   <NuisancePower>k__BackingField: 1
   <IsGoblin>k__BackingField: 0
-  <BarIrritationCondition>k__BackingField: 1
+  <BarIrritationCondition>k__BackingField: 0
   <InnIrritationCondition>k__BackingField:
     rid: 4288743400620425247
   <IrritationEffect>k__BackingField:
     rid: 8816559820501155847
+  <RestartCheckCondition>k__BackingField: 0
   references:
     version: 2
     RefIds:

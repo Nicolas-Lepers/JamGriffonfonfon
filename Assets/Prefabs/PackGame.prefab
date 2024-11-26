@@ -455,7 +455,7 @@ PrefabInstance:
     - target: {fileID: 5253719614996086537, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
       propertyPath: _cardsData.Array.data[15]
       value: 
-      objectReference: {fileID: 11400000, guid: 0e81cd4ee31b6cb46a62336089519673, type: 2}
+      objectReference: {fileID: 11400000, guid: ae4502a075c8fc747b72e7cca70ae3c6, type: 2}
     - target: {fileID: 5253719614996086537, guid: 896df0fb3e76f5945a47d4951ed34a5a, type: 3}
       propertyPath: _cardsData.Array.data[16]
       value: 
