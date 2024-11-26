@@ -7,4 +7,5 @@ public class CardInfo : MonoBehaviour
 {
     public CardData CardDataRef;
     public CardMovement CardMovement;
+    public Sprite CardBackSprite;
 }

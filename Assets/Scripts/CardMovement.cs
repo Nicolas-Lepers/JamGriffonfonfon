@@ -182,19 +182,24 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         _siblingIndex = transform.GetSiblingIndex();
         _siblingIndexVisual = _currentCardVisual.transform.GetSiblingIndex();
         
-        transform.SetSiblingIndex(100);
-        CardVisual.transform.SetSiblingIndex(100);
+        SetSiblingIndex(100,100);
     }
     
     private void MoveCardToCenter()
     {
         if (IsDragging) return;
 
-        // _lastPos = transform.position;
         Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
         Vector3 worldCenter = Camera.main.ScreenToWorldPoint(screenCenter);
-        worldCenter.z = 0; // Ensure the z position is 0 to keep it on the same plane
+        worldCenter.z = 0;
+        
         transform.position = worldCenter;
+    }
+    
+    public void SetSiblingIndex(int indexTransform, int indexVisual)
+    {
+        transform.SetSiblingIndex(indexTransform);
+        CardVisual.transform.SetSiblingIndex(indexVisual);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -215,10 +220,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
             _currentCardVisual.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
             transform.position = _lastPos;
             
-            transform.SetSiblingIndex(_siblingIndex);
-            CardVisual.transform.SetSiblingIndex(_siblingIndexVisual);
-            
-            // transform.SetParent(_lastParent);
+            SetSiblingIndex(_siblingIndex, _siblingIndexVisual);
             
             IsEnlarge = false;
         }
