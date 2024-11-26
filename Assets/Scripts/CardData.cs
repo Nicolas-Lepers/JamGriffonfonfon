@@ -17,4 +17,6 @@ public class CardData : ScriptableObject
     [field:SerializeReference, SerializeField, SubclassSelector] public IIrritationCondition InnIrritationCondition { get; private set; }
     [field:Space(10)]
     [field:SerializeReference, SerializeField, SubclassSelector] public IIrrationEffect IrritationEffect { get; private set; }
+    [field: SerializeField] public bool RestartCheckCondition { get; set; } = false;
+
 }
