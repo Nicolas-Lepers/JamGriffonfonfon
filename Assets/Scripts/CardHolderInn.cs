@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,12 +12,10 @@ public class CardHolderInn : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 {
     public static CardHolderInn Instance;
 
-    [SerializeField] private Transform _parentCardInn;
     public bool IsEnteredInn { get; private set; }
 
-    private List<Vector3> _cardInnTargetPos = new List<Vector3>();
-    private List<CardMovement> _cardsInn = new List<CardMovement>();
-
+    [SerializeField] private Image _innHighlightImage;
+    [SerializeField] private Transform _parentCardInn;
     [SerializeField] private float _offsetPosYCardInn = 3f;
     [SerializeField] private float _topYLimit;
 
@@ -27,11 +26,17 @@ public class CardHolderInn : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void OnPointerEnter(PointerEventData eventData)
     {
         IsEnteredInn = true;
+        
+        if(GameManager.Instance.CurrentCardDragging != null)
+            OnPointerEnterAnim();
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         IsEnteredInn = false;
+        
+        _innHighlightImage.DOKill();
+        _innHighlightImage.DOFade(0, 0.25f);
     }
 
     public void ReleaseCardOnIt(CardMovement card)
@@ -56,13 +61,11 @@ public class CardHolderInn : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             card.SetNewBasePos(targetPos);
         }
 
-        Debug.Log("inn card");
         GameManager.Instance.PutCardInInn(card.GetComponent<CardInfo>());
     }
 
     public void ReplaceCardInOrder(CardMovement card)
     {
-
         int cardCount = GameManager.Instance.CardsInn.Count;
         card.transform.SetSiblingIndex(0);
         card.CardVisual.transform.SetSiblingIndex(0);
@@ -82,6 +85,10 @@ public class CardHolderInn : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
     }
 
+    private void OnPointerEnterAnim()
+    {
+        _innHighlightImage.DOFade(1, 0.5f).SetLoops(-1, LoopType.Yoyo);
+    }
     private void OnDrawGizmos()
     {
         if (_parentCardInn == null) return;
