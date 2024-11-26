@@ -15,12 +15,16 @@ public class EffectQuitsAndNewComes : IIrrationEffect
 
     public IEnumerator ActivateEffect(int cardIndex)
     {
-        Vector2 posToMoveCard = GameManager.Instance.CardsInn[cardIndex].transform.position;
-        GameManager.Instance.CardGoDeck(cardIndex,false);
+        var gameManager = GameManager.Instance;
+        gameManager.CardsInn[cardIndex].CardDataRef.RestartCheckCondition = true;
+
+        Vector2 posToMoveCard = gameManager.CardsInn[cardIndex].transform.position;
+        gameManager.CardGoDeck(cardIndex,false);
         var index = Position == PositionType.SAME ? cardIndex : 0;
 
         yield return new WaitForSeconds(.2f);
 
-        GameManager.Instance.AddCardFromDeskToInn(index, posToMoveCard);
+        gameManager.AddCardFromDeskToInn(index, posToMoveCard);
+        gameManager.CheckConditionInInnAtIndex(index);
     }
 }
