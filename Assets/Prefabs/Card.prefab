@@ -168,3 +168,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardDataRef: {fileID: 0}
   CardMovement: {fileID: 6835082735651288779}
+  CardBackSprite: {fileID: 21300000, guid: 9e82da19dad41ad47a94490382e44117, type: 3}
