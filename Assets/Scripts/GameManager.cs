@@ -416,6 +416,7 @@ public class GameManager : MonoBehaviour
         MoveCardToPoint(card, _discardPilePos.position, true);
         _cardsInn.Remove(card);
         _discardPile.Add(card);
+        card.CardMovement.CardVisual.transform.SetAsFirstSibling();
 
         if (_cardsInn.Count > 0)
             CardHolderInn.Instance.ReplaceCardInOrder(_cardsInn[_cardsInn.Count - 1].CardMovement);
@@ -437,6 +438,8 @@ public class GameManager : MonoBehaviour
         cardInfo.CardMovement.CardVisual.CardImage.sprite = cardInfo.CardDataRef.Sprite;
 
         _discardPile.Add(cardInfo);
+        cardInfo.CardMovement.CardVisual.transform.SetAsFirstSibling();
+
 
         MoveCardToPoint(cardInfo, _discardPilePos.position, true);
 
