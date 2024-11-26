@@ -365,6 +365,7 @@ public class GameManager : MonoBehaviour
 
         MoveCardToPoint(card, _discardPilePos.position, true);
         _cardsInn.RemoveAt(cardIndex);
+        _cardsInn[cardIndex].CardMovement.SetSiblingIndex(90, 90);
         if (_cardsInn.Count > 0 && replace == true)
             CardHolderInn.Instance.ReplaceCardInOrder(_cardsInn[_cardsInn.Count - 1].CardMovement);
     }
@@ -374,7 +375,7 @@ public class GameManager : MonoBehaviour
         MoveCardToPoint(card, _discardPilePos.position, true);
         _cardsInn.Remove(card);
         _discardPile.Add(card);
-
+        card.CardMovement.SetSiblingIndex(90, 90);
         if (_cardsInn.Count > 0)
             CardHolderInn.Instance.ReplaceCardInOrder(_cardsInn[_cardsInn.Count - 1].CardMovement);
 
@@ -444,6 +445,7 @@ public class GameManager : MonoBehaviour
         cardInfo.CardMovement.CardVisual.CardImage.sprite = cardInfo.CardDataRef.Sprite;
 
         _discardPile.Add(cardInfo);
+
 
         MoveCardToPoint(cardInfo, _discardPilePos.position, true);
 
