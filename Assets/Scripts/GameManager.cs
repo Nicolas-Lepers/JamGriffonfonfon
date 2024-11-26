@@ -357,6 +357,7 @@ public class GameManager : MonoBehaviour
     public void CardLeaveInn(int cardIndex, bool replace = true)
     {
         MoveCardToPoint(_cardsInn[cardIndex], _discardPilePos.position, true);
+        _cardsInn[cardIndex].CardMovement.SetSiblingIndex(90, 90);
         _cardsInn.RemoveAt(cardIndex);
         if (_cardsInn.Count > 0 && replace == true)
             CardHolderInn.Instance.ReplaceCardInOrder(_cardsInn[_cardsInn.Count - 1].CardMovement);

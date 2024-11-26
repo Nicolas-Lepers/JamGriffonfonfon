@@ -44,8 +44,7 @@ public class CardHolderInn : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         GameManager.Instance.AddCardInInn(card.GetComponent<CardInfo>());
 
         int cardCount = GameManager.Instance.CardsInn.Count;
-        card.transform.SetSiblingIndex(0);
-        card.CardVisual.transform.SetSiblingIndex(0);
+        card.SetSiblingIndex(0,0);
 
         float totalHeight = _offsetPosYCardInn * cardCount;
         if (totalHeight > _topYLimit)
@@ -67,8 +66,7 @@ public class CardHolderInn : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void ReplaceCardInOrder(CardMovement card)
     {
         int cardCount = GameManager.Instance.CardsInn.Count;
-        card.transform.SetSiblingIndex(0);
-        card.CardVisual.transform.SetSiblingIndex(0);
+        card.SetSiblingIndex(0,0);
 
         float totalHeight = _offsetPosYCardInn * cardCount;
         if (totalHeight > _topYLimit)
