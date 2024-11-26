@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using DG.Tweening.Core.Easing;
+using static EffectQuitsAndNewComes;
 
 public class GameManager : MonoBehaviour
 {
@@ -116,7 +118,7 @@ public class GameManager : MonoBehaviour
 
         while (_cardsBar.Count < 4 || _barIndexNul != -1)
         {
-            if(_cardsDeck.Count <= 0)
+            if (_cardsDeck.Count <= 0)
             {
                 CheckEndGame();
                 break;
@@ -127,6 +129,8 @@ public class GameManager : MonoBehaviour
             CardInfo cardInfo = _cardsDeck[rand];
 
             cardInfo.CardMovement.CardVisual.CardImage.sprite = cardInfo.CardDataRef.Sprite;
+            Debug.Log(_barIndexNul);
+
 
             if (_barIndexNul < 0)
                 _cardsBar.Add(cardInfo);
@@ -145,7 +149,14 @@ public class GameManager : MonoBehaviour
 
             cardInfo.gameObject.SetActive(true);
             yield return wait;
+
+            for (int i = _cardsBar.Count - 1; i >= 0; i--)
+            {
+                if (_cardsBar[i] == null)
+                    _barIndexNul = i;
+            }
         }
+
 
         if (GetNumberOfBattleInBar() >= 3)
             CheckNuisance(NuisanceType.BATTLE);
@@ -187,7 +198,7 @@ public class GameManager : MonoBehaviour
 
             StartCoroutine(cardData.IrritationEffect.ActivateEffect(i));
 
-            if(cardData.RestartCheckCondition == true)
+            if (cardData.RestartCheckCondition == true)
                 break;
         }
     }
@@ -360,6 +371,7 @@ public class GameManager : MonoBehaviour
     }
     public void CardLeaveInn(int cardIndex, bool replace = true)
     {
+        if (cardIndex >= _cardsInn.Count || cardIndex < 0) return;
         var card = _cardsInn[cardIndex];
         if (_cardsInn.Contains(card) == false) return;
 
@@ -383,7 +395,7 @@ public class GameManager : MonoBehaviour
     public void CardGoDeck(int cardIndex, bool replace = true)
     {
         MoveCardToPoint(_cardsInn[cardIndex], _deckPos.position, true);
-        _cardsInn[cardIndex].CardMovement.CardVisual.CardImage.sprite = null;
+        _cardsInn[cardIndex].CardMovement.CardVisual.CardImage.sprite = _cardsInn[cardIndex].CardBackSprite;
 
         int rand = Random.Range(0, _cardsDeck.Count - 1);
         _cardsDeck.Insert(rand, _cardsInn[cardIndex]);
@@ -428,7 +440,7 @@ public class GameManager : MonoBehaviour
         _barIndexNul = -1;
     }
 
-   
+
 
     public void AddCardToDiscardPile(CardInfo card)
     {
@@ -505,11 +517,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void SetCardToDiscardPile(CardData card)
+    public CardInfo GetCardInBar()
     {
-
+        return _cardsBar[Random.Range(0, _cardsBar.Count - 1)];
     }
-
 
     public void SwitchCard(CardInfo card, int index)
     {
@@ -528,6 +539,20 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void SwitchCardFromBar(CardInfo card, int index, int cardIndex)
+    {
+        var pos = _cardsInn[index].transform.position;
+
+        MoveCardToPoint(card, pos, true);
+
+        _cardsBar[GetCardIndexInBar(card)] = null;
+        _cardsInn.Add(card);
+        CardLeaveInn(_cardsInn[cardIndex]);
+
+        if (_cardsInn.Count > 0)
+            CardHolderInn.Instance.ReplaceCardInOrder(card.CardMovement);
+
+    }
     private int GetCardIndexInInn(CardInfo card)
     {
         return _cardsInn.IndexOf(card);

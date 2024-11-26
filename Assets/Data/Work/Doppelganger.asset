@@ -23,6 +23,7 @@ MonoBehaviour:
     rid: 5213559127556489221
   <IrritationEffect>k__BackingField:
     rid: 5213559127556489222
+  <RestartCheckCondition>k__BackingField: 1
   references:
     version: 2
     RefIds:

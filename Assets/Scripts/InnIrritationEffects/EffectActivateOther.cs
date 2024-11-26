@@ -9,9 +9,12 @@ public class EffectActivateOther : IIrrationEffect
 
     public IEnumerator ActivateEffect(int cardIndex)
     {
-         var index = cardIndex+OtherOffset;
-         CardInfo other = GameManager.Instance.CardsInn[index];
-         other.CardDataRef.IrritationEffect.ActivateEffect(index);
+        if (cardIndex <= 2)
+            yield break;
+
+        var index = cardIndex + OtherOffset;
+        CardInfo other = GameManager.Instance.CardsInn[index];
+        other.CardDataRef.IrritationEffect.ActivateEffect(index);
         yield return null;
     }
 }
