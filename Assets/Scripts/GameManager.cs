@@ -67,6 +67,7 @@ public class GameManager : MonoBehaviour
             if (go.TryGetComponent(out CardInfo card) != false)
             {
                 card.CardDataRef = _cardsData[i];
+
                 _cardsDeck.Add(card);
             }
         }
@@ -134,6 +135,8 @@ public class GameManager : MonoBehaviour
             _cardsDeck.RemoveAt(rand);
 
             CardMovement move = cardInfo.CardMovement;
+            move.SetSiblingIndex(50,50);
+            
             if (_barIndexNul < 0)
                 move.MoveToPoint(_cardBarTargetPos[cardsInBar].position, false);
             else
@@ -407,6 +410,7 @@ public class GameManager : MonoBehaviour
 
         randomCard.CardMovement.CardVisual.CardImage.sprite = randomCard.CardDataRef.Sprite;
 
+        randomCard.CardMovement.SetSiblingIndex(50,50);
         MoveCardToPoint(randomCard, pos, true);
 
         AddCardInInnAtIndex(randomCard, index);
@@ -427,9 +431,7 @@ public class GameManager : MonoBehaviour
         _cardsBar[_barIndexNul] = card;
         _barIndexNul = -1;
     }
-
-   
-
+    
     public void AddCardToDiscardPile(CardInfo card)
     {
         _discardPile.Add(card);
@@ -510,7 +512,6 @@ public class GameManager : MonoBehaviour
 
     }
 
-
     public void SwitchCard(CardInfo card, int index)
     {
         CardInfo temp = _cardsInn[index];
@@ -545,8 +546,6 @@ public class GameManager : MonoBehaviour
     {
         return _cardsBar[Random.Range(0, _cardsBar.Count)];
     }
-
-
 
     public void SetPositionInInnForAllCard()
     {
