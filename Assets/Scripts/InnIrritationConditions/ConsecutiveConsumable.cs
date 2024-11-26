@@ -5,11 +5,12 @@ using UnityEngine;
 public class ConsecutiveConsumable : IIrritationCondition
 {
     [SerializeField] private int _minConsecutiveConsumable;
-    [SerializeField] private Consumable _targetConsumable;
+    [SerializeField] private ConsumableBoth _targetConsumable;
     
     public bool IsIrritated(int cardIndex)
     {
-        var followingConsumable = _targetConsumable == Consumable.BEER ? GameManager.Instance.GetNumberOfBeer(true) : GameManager.Instance.GetNumberOfFood(true);
-        return followingConsumable >= _minConsecutiveConsumable;
+         if (_targetConsumable == ConsumableBoth.BEER) return GameManager.Instance.GetNumberOfBeer(true) >= _minConsecutiveConsumable;
+         if (_targetConsumable == ConsumableBoth.FOOD) return GameManager.Instance.GetNumberOfFood(true) >= _minConsecutiveConsumable;
+         return Mathf.Max(GameManager.Instance.GetNumberOfBeer(true), GameManager.Instance.GetNumberOfBeer(true)) >= _minConsecutiveConsumable;
     }
 }

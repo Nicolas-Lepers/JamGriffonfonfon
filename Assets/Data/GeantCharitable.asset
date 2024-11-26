@@ -34,4 +34,4 @@ MonoBehaviour:
       type: {class: ConsecutiveConsumable, ns: , asm: Assembly-CSharp}
       data:
         _minConsecutiveConsumable: 3
-        _targetConsumable: 0
+        _targetConsumable: 2

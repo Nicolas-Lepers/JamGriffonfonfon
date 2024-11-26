@@ -14,9 +14,9 @@ public class CardData : ScriptableObject
     [field: SerializeField] public bool IsGoblin { get; private set; } = false;
     [field:SerializeField] public NuisanceTypeNullable BarIrritationCondition { get; private set; }
     [field:Space(10)]
-    [field:SerializeReference, SerializeField, SubclassSelector] public IIrritationCondition InnIrritationCondition { get; private set; }
-    [field:Space(10)]
-    [field:SerializeReference, SerializeField, SubclassSelector] public IIrrationEffect IrritationEffect { get; private set; }
+    [field:SerializeReference, SubclassSelector] public IIrritationCondition InnIrritationCondition { get; private set; }
+    [field:Space(10)]        
+    [field:SerializeReference, SubclassSelector] public IIrrationEffect IrritationEffect { get; private set; }
     [field: SerializeField] public bool RestartCheckCondition { get; set; } = false;
 
 }
