@@ -205,11 +205,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1346727389366799175, guid: 298c33d92262a1f4da20e034e280755e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1775866703762960113, guid: 298c33d92262a1f4da20e034e280755e, type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 2421125689657808109, guid: 298c33d92262a1f4da20e034e280755e, type: 3}
+      propertyPath: m_Color.a
+      value: 0.7607843
+      objectReference: {fileID: 0}
+    - target: {fileID: 3333467567383752607, guid: 298c33d92262a1f4da20e034e280755e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1824.2301
+      objectReference: {fileID: 0}
+    - target: {fileID: 3333467567383752607, guid: 298c33d92262a1f4da20e034e280755e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.11495972
       objectReference: {fileID: 0}
     - target: {fileID: 5020783706544639436, guid: 298c33d92262a1f4da20e034e280755e, type: 3}
       propertyPath: m_Camera
